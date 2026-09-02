@@ -380,3 +380,13 @@
     padding: 40px;
   }
 }
+
+/* The 404 section is the only view whose content cannot fill the viewport, so
+   without a floor the footer rides up under a short message. The header is 72px
+   and the mobile tab bar takes another slice, so 60vh leaves the numeral
+   optically centred without pushing the footer off a laptop screen. Written here
+   because min-h-[60vh] is an arbitrary value the compiled stylesheet never
+   emitted, and as written it silently did nothing. */
+.page-404 {
+  min-height: 60vh;
+}

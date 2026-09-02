@@ -1675,11 +1675,11 @@
 
     function page404() {
       return (
-        '<section class="bg-surface pt-20 pb-14 md:pt-32 md:pb-20 border-b border-border-subtle min-h-[60vh] flex flex-col justify-center items-center text-center">' +
+        '<section class="bg-surface pt-20 pb-14 md:pt-32 md:pb-20 border-b border-border-subtle page-404 flex flex-col justify-center items-center text-center">' +
         '<div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">' +
         '<h1 class="text-primary text-display-xl-mobile md:text-display-xl mb-6">404</h1>' +
-        '<p class="text-headline-sm-m md:text-headline-sm text-on-surface-variant mb-10 max-w-xl mx-auto">We couldn\'t find the page you\'re looking for.</p>' +
-        '<a href="#/" data-link class="inline-flex border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Return Home</a>' +
+        '<p class="text-title-lg-m md:text-title-lg text-on-surface-variant mb-10 max-w-xl mx-auto">We couldn\'t find the page you\'re looking for.</p>' +
+        '<a href="#/" data-link class="cta-pill cta-pill--compact inline-flex border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Return Home</a>' +
         '</div>' +
         '</section>'
       );
