@@ -9,7 +9,7 @@ import os, io
 from PIL import Image
 
 SRC = {
-    "home":   "images/hero section 4.jpg",   # tree planting, golden light
+    "home":   "images/FFF.jpg",               # children in a circle, shot from below
     "work":   "images/hero section 3.jpg",   # food drive, packing totes
     # hero section1/2 were 360px and 426px thumbnails - far too small for a
     # full-bleed hero, so these two slots use the largest images in the project.

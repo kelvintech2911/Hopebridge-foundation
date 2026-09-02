@@ -33,7 +33,7 @@
        `widths` never exceeds the source width, so the srcset never promises detail
        the original does not have. */
     const HERO = {
-      home:   { w: 1000, h: 667, widths: [640, 1000] },
+      home:   { w: 735, h: 490, widths: [640, 735] },
       work:   { w: 1000, h: 625, widths: [640, 1000] },
       impact: { w: 1200, h: 675, widths: [640, 1024, 1200] },
       about:  { w: 1920, h: 1279, widths: [640, 1024, 1536] }
@@ -699,7 +699,7 @@
     function pageHome() {
       return (
         /* Hero */
-        '<section class="hero-offset relative bg-stone-surface overflow-hidden min-h-[78svh] md:min-h-[86svh] flex items-center">' +
+        '<section class="hero-offset relative bg-stone-surface overflow-hidden min-h-[100svh] flex items-center">' +
         '<div class="absolute inset-0 ph noise-hero" aria-hidden="true">' +
         heroPicture("home") +
         "</div>" +
