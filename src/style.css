@@ -315,3 +315,23 @@
   .contact-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding-block:6px}
   .contact-link svg{flex:none}
   .contact-link--lg{gap:14px}
+
+  /* Back to top. bottom-20 / right-8 / w-12 / h-12 / shadow-lg were never in the
+     compiled block, so the button had no offsets and no size: position:fixed with
+     auto insets left it parked at its static position, out of sight. Geometry is
+     held here instead. It clears the phone tab bar and the home indicator beneath
+     it, and moves into the page corner from md up where there is no tab bar. */
+  .to-top{position:fixed;right:20px;bottom:calc(4rem + env(safe-area-inset-bottom,0px) + 16px);z-index:45;display:grid;place-items:center;width:48px;height:48px;padding:0;border:0;border-radius:9999px;background:#173B2F;color:#F5F5F0;cursor:pointer;box-shadow:0 6px 20px -8px rgba(20,22,26,.45);transition:opacity .3s ease,transform .2s ease,filter .2s ease}
+  .to-top:active{transform:scale(.96)}
+  .to-top .material-symbols-outlined{font-size:22px}
+  @media (min-width:768px){
+    .to-top{right:32px;bottom:32px;width:52px;height:52px}
+    .to-top .material-symbols-outlined{font-size:24px}
+  }
+
+/* The four utilities initScrollToTop toggles. Unlayered and last so they win over
+   .to-top's own appearance. */
+.opacity-0{opacity:0}
+.opacity-100{opacity:1}
+.pointer-events-none{pointer-events:none}
+.pointer-events-auto{pointer-events:auto}
