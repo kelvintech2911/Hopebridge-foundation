@@ -335,3 +335,34 @@
 .opacity-100{opacity:1}
 .pointer-events-none{pointer-events:none}
 .pointer-events-auto{pointer-events:auto}
+
+/* ---------------------------------------------------------------------------
+   CTA pill sizing on narrow screens.
+
+   The pill CTAs are compiled at one size, px-8 (or px-10) with py-4 and the 12px
+   caps label. Stacked full width on a phone that reads as a slab, so below the sm
+   breakpoint the padding and the label each step down a notch. The result still
+   clears a 44px touch target.
+
+   Written as plain CSS, and last in the file, for two reasons: the stylesheet is a
+   compiled dump, so an sm: variant of these utilities does not exist in it and
+   would silently do nothing; and being last is what lets these values beat the
+   padding utilities already on the same element. */
+@media (max-width: 639px) {
+  .cta-pill {
+    padding-left: 1.375rem;
+    padding-right: 1.375rem;
+    padding-top: 0.9375rem;
+    padding-bottom: 0.9375rem;
+    font-size: 11px;
+    line-height: 14px;
+    letter-spacing: 0.09em;
+  }
+
+  /* Buttons that sit beside a field or inside a card, where the full CTA height
+     would overpower what it belongs to. */
+  .cta-pill--compact {
+    padding-top: 0.8125rem;
+    padding-bottom: 0.8125rem;
+  }
+}

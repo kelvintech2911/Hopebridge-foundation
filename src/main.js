@@ -620,8 +620,8 @@
         esc(o.body || "Every program we run was paid for by people who decided that a small, steady contribution was worth more than a large intention.") + "</p>" +
         "</div>" +
         '<div class="lg:col-span-5 flex flex-col items-start sm:flex-row lg:justify-end gap-4">' +
-        '<a href="#/donate" data-link class="bg-secondary-container text-primary border border-transparent px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center btn-lift active:scale-[0.98] transition-all rounded-full">Donate now</a>' +
-        (o.hideOtherWays ? "" : '<a href="#/contact" data-link class="btn-ghost-dark border border-primary-fixed-dim text-primary-fixed px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Other ways to help</a>') +
+        '<a href="#/donate" data-link class="cta-pill bg-secondary-container text-primary border border-transparent px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center btn-lift active:scale-[0.98] transition-all rounded-full">Donate now</a>' +
+        (o.hideOtherWays ? "" : '<a href="#/contact" data-link class="cta-pill btn-ghost-dark border border-primary-fixed-dim text-primary-fixed px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Other ways to help</a>') +
         "</div>" +
         "</div>" +
         "</div></section>";
@@ -709,8 +709,8 @@
         '<h1 class="text-display-xl-mobile md:text-display-xl mb-7 text-balance">Bridging hope, creating lasting change.</h1>' +
         '<p class="text-body-lg hero-lede mb-11 max-w-2xl text-pretty">Compassion and opportunity usually exist in the same community already, sitting on opposite banks with nothing running between them. For eight years we have been building what runs between.</p>' +
         '<div class="flex flex-col items-start sm:flex-row gap-4 mb-10">' +
-        '<a href="#/donate" data-link class="hero-cta border px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Donate now</a>' +
-        '<a href="#/our-work" data-link class="hero-ghost border px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Discover our work</a>' +
+        '<a href="#/donate" data-link class="cta-pill hero-cta border px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Donate now</a>' +
+        '<a href="#/our-work" data-link class="cta-pill hero-ghost border px-6 lg:px-9 py-4 text-label-caps-sm lg:text-label-caps uppercase text-center active:scale-[0.98] transition-all rounded-full">Discover our work</a>' +
         "</div>" +
         '<div class="hero-proof reveal reveal-delay-2">' +
         '<div class="hero-proof__avatars">' +
@@ -1232,7 +1232,7 @@
         '<label for="cConsent" class="text-body-md text-on-surface-variant">Keep me on the mailing list for quarterly updates. We send four a year and never share your details.</label>' +
         "</div>" +
         '<div class="sm:col-span-2 flex flex-col sm:flex-row sm:items-center gap-5 pt-2">' +
-        '<button type="submit" class="bg-primary text-on-primary px-10 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Send message</button>' +
+        '<button type="submit" class="cta-pill bg-primary text-on-primary px-10 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Send message</button>' +
         '<p class="text-body-md text-on-surface-variant">Typical reply time: within 2 business days.</p>' +
         "</div>" +
         "</form>" +
@@ -1241,7 +1241,7 @@
         '<span class="material-symbols-outlined text-primary mb-5 block" style="font-size:40px" aria-hidden="true">mark_email_read</span>' +
         '<h2 class="text-headline-md text-primary mb-4">Message ready to send.</h2>' +
         '<p class="text-body-md text-on-surface-variant mb-6 max-w-lg text-pretty">Thank you for reaching out. Your message has been received.</p>' +
-        '<button id="contactAgain" class="border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-all rounded-full">Write another message</button>' +
+        '<button id="contactAgain" class="cta-pill cta-pill--compact border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-all rounded-full">Write another message</button>' +
         "</div>" +
         "</div>" +
 
@@ -1393,7 +1393,7 @@
         '<p class="text-body-sm text-outline mt-2">Choosing “where it is needed most” is the most useful option for us, and we will still write and tell you where it went.</p>' +
         "</div>" +
 
-        '<button type="button" data-next="2" class="w-full bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Continue to your details</button>' +
+        '<button type="button" data-next="2" class="cta-pill w-full bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Continue to your details</button>' +
         "</div>" +
 
         /* ---- STEP 2 : DETAILS ---- */
@@ -1427,8 +1427,8 @@
         "</div>" +
 
         '<div class="flex flex-col-reverse sm:flex-row gap-3">' +
-        '<button type="button" data-back="1" class="sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
-        '<button type="button" data-next="3" class="flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Review your donation</button>' +
+        '<button type="button" data-back="1" class="cta-pill sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
+        '<button type="button" data-next="3" class="cta-pill flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Review your donation</button>' +
         "</div>" +
         "</div>" +
 
@@ -1438,8 +1438,8 @@
         '<p class="text-body-md text-on-surface-variant mb-9">Nothing has been charged yet. You can still change anything here.</p>' +
         '<dl id="reviewList" class="border-t border-border-subtle mb-8"></dl>' +
         '<div class="flex flex-col-reverse sm:flex-row gap-3">' +
-        '<button type="button" data-back="2" class="sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
-        '<button type="button" data-next="4" class="flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Proceed to payment</button>' +
+        '<button type="button" data-back="2" class="cta-pill sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
+        '<button type="button" data-next="4" class="cta-pill flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Proceed to payment</button>' +
         "</div>" +
         "</div>" +
 
@@ -1453,7 +1453,7 @@
         '<p class="text-body-md text-on-surface-variant mb-5">Please send your donation to the wallet address below. Once sent, click complete.</p>' +
         '<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">' +
         '<input type="text" id="cryptoAddress" value="bc1qj7fa2rk4efl7lgjvasm0u25w0h9cql9j7aman9" class="font-mono text-body-md bg-transparent" style="flex: 1; border: 1px solid #E0DCD3; padding: 10px 14px; border-radius: 0.5rem;" readonly/>' +
-        '<button type="button" id="copyWalletBtn" class="sm:w-auto w-full border border-primary text-primary px-6 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full shrink-0">Copy</button>' +
+        '<button type="button" id="copyWalletBtn" class="cta-pill cta-pill--compact sm:w-auto w-full border border-primary text-primary px-6 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full shrink-0">Copy</button>' +
         "</div>" +
         '<p id="copyMsg" class="text-body-sm text-primary mt-3 hidden">Address copied to clipboard!</p>' +
         "</div>" +
@@ -1464,8 +1464,8 @@
         "</div>" +
 
         '<div class="flex flex-col-reverse sm:flex-row gap-3">' +
-        '<button type="button" data-back="3" class="sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
-        '<button type="button" id="payBtn" class="flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Complete donation</button>' +
+        '<button type="button" data-back="3" class="cta-pill sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Back</button>' +
+        '<button type="button" id="payBtn" class="cta-pill flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase btn-lift active:scale-[0.98] transition-all rounded-full">Complete donation</button>' +
         "</div>" +
 
         "</div>" +
@@ -1506,8 +1506,8 @@
 
 
         '<div class="flex flex-col sm:flex-row gap-3">' +
-        '<a href="#/impact" data-link class="flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase text-center btn-lift active:scale-[0.98] transition-all rounded-full">See what donations fund</a>' +
-        '<button type="button" id="donateAgain" class="sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Start again</button>' +
+        '<a href="#/impact" data-link class="cta-pill flex-1 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase text-center btn-lift active:scale-[0.98] transition-all rounded-full">See what donations fund</a>' +
+        '<button type="button" id="donateAgain" class="cta-pill sm:w-auto border border-primary text-primary px-8 py-4 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Start again</button>' +
         "</div>" +
         "</div>" +
 
