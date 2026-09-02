@@ -69,6 +69,7 @@
         </nav>
 
         <div class="flex items-center gap-3">
+          <label class="lang-switch" data-no-i18n><span class="sr-only">Choose language</span><select data-lang-select aria-label="Choose language"><option value="en">EN</option><option value="es">ES</option><option value="fr">FR</option><option value="it">IT</option></select></label>
           <a href="#/donate" data-link
             class="hidden sm:inline-flex bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all duration-300 rounded-full">Donate
             Now</a>
@@ -103,7 +104,15 @@
         <a href="#/donate" data-link
           class="cta-pill mt-8 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase text-center rounded-full">Donate
           Now</a>
-
+        <div class="lang-switch lang-switch--drawer mt-8" data-no-i18n>
+          <span class="lang-switch__label">Language</span>
+          <select data-lang-select aria-label="Choose language">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="it">Italiano</option>
+          </select>
+        </div>
       </nav>
     </div>
   </div>

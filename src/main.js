@@ -1,3 +1,4 @@
+import { initI18n } from "./i18n/runtime.js";
   
 
     /* ============================================================================
@@ -2533,6 +2534,9 @@
       initChrome();
       initScrollToTop();
       render();
+      /* After the first render, so the observer has a page to work on and the
+         header and footer that live in index.html are picked up too. */
+      initI18n();
     }
     window.addEventListener("popstate", () => { navIntent = "pop"; });
     window.addEventListener("hashchange", render);
