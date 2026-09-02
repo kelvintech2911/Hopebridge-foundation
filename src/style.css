@@ -289,3 +289,10 @@
   @media (min-width:768px){
     .hero-offset{padding-top:80px}
   }
+
+  /* Contact rows: an icon beside its address or number. The icon used to carry a
+     1.25rem inline margin, which left it visibly adrift from the text it labels,
+     and it took its size from utilities rather than from its own attributes. */
+  .contact-link{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding-block:6px}
+  .contact-link svg{flex:none}
+  .contact-link--lg{gap:14px}
