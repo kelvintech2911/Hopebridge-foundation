@@ -1672,6 +1672,18 @@
         '</div></section>'
       );
     }
+
+    function page404() {
+      return (
+        '<section class="bg-surface pt-20 pb-14 md:pt-32 md:pb-20 border-b border-border-subtle min-h-[60vh] flex flex-col justify-center items-center text-center">' +
+        '<div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">' +
+        '<h1 class="text-primary text-display-xl-mobile md:text-display-xl mb-6">404</h1>' +
+        '<p class="text-headline-sm-m md:text-headline-sm text-on-surface-variant mb-10 max-w-xl mx-auto">We couldn\'t find the page you\'re looking for.</p>' +
+        '<a href="#/" data-link class="inline-flex border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Return Home</a>' +
+        '</div>' +
+        '</section>'
+      );
+    }
     /* ============================================================================
        APP, routing, motion, forms and the donation flow
        ========================================================================== */
@@ -1685,7 +1697,8 @@
       "/contact": { render: pageContact, title: "Contact, HopeBridge Foundation" },
       "/privacy": { render: pagePrivacy, title: "Privacy Policy, HopeBridge Foundation" },
       "/terms": { render: pageTerms, title: "Terms of Service, HopeBridge Foundation" },
-      "/financials": { render: pageFinancials, title: "Financials, HopeBridge Foundation" }
+      "/financials": { render: pageFinancials, title: "Financials, HopeBridge Foundation" },
+      "/404": { render: page404, title: "Page Not Found, HopeBridge Foundation" }
     };
 
     let currentPath = null;
@@ -1720,7 +1733,7 @@
         raw = raw.slice(0, qi);
       }
       if (raw.length > 1 && raw.slice(-1) === "/") raw = raw.slice(0, -1);
-      const path = ROUTES[raw] ? raw : "/";
+      const path = ROUTES[raw] ? raw : "/404";
       /* the key includes the query string so that e.g. ?reason=volunteer
          re-renders the page, while a bare #anchor change does not */
       return { path: path, anchor: anchor, query: query, key: path + (qs ? "?" + qs : "") };
