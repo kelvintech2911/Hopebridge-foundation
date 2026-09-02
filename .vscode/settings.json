@@ -1,0 +1,17 @@
+{
+  // Live Server serves this folder as-is, so index.html asks for /src/style.css
+  // and /src/main.js by plain unversioned paths. Chrome will happily reuse a
+  // cached copy of either, which is why a CSS change could look like it had not
+  // been applied until the preview was reloaded with the cache disabled.
+  //
+  // Telling Live Server to send no-store makes the browser refetch every time,
+  // so an ordinary reload is enough. This affects the local preview only. The
+  // deployed site is unaffected, because vite build emits content-hashed
+  // filenames such as assets/index-Dn7PRYrS.css that bust their own cache.
+  "liveServer.settings.headers": {
+    "Cache-Control": "no-store, max-age=0"
+  },
+
+  // Keep the preview on the port the project has always used.
+  "liveServer.settings.port": 5500
+}
