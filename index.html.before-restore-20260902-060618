@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>HopeBridge Foundation, Connecting compassion with opportunity</title>
+<meta name="description" content="HopeBridge Foundation works alongside underserved communities across the United States in education, community wellbeing, health and youth empowerment."/>
+<meta name="theme-color" content="#173B2F"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2312233F'/%3E%3Cpath d='M6 21c0-6 4.5-10 10-10s10 4 10 10' fill='none' stroke='%23C9D8F0' stroke-width='2.5'/%3E%3Cpath d='M4 21h24M16 11v10' stroke='%23E8BC63' stroke-width='2.5'/%3E%3C/svg%3E"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..400,0..1,0&amp;icon_names=add,arrow_forward,campaign,check_small,close,diversity_1,ecg_heart,edit_calendar,fact_check,handshake,handyman,hearing,history_toggle_off,home,info,insights,location_on,mark_email_read,menu,menu_book,public,receipt_long,verified_user,volunteer_activism,water_drop&amp;display=block" rel="stylesheet"/>
+<!-- COMPILED STYLESHEET, not a runtime one. Built with the Tailwind CLI from the
+     former inline theme config plus the hand-written component CSS, then inlined:
+     this is a one-page app, so a separate file would only add a render-blocking
+     round trip.
+
+     Consequence: a Tailwind utility class that does not already appear somewhere in
+     this file WILL NOT WORK until the stylesheet is rebuilt. Editing existing classes,
+     or writing plain CSS into this block, needs no rebuild.
+
+     Layer order below is deliberate. Component rules (.field, .chip, .seg) sit in the
+     components layer so a utility on the same element still overrides them; rules that
+     must win outright (.wordmark, .reveal) are emitted after the utilities. -->
+<link rel="stylesheet" href="/src/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:bg-primary focus:text-on-primary focus:px-5 focus:py-3 focus:text-label-caps focus:uppercase">Skip to content</a>
+
+<!-- ============ HEADER ============ -->
+<header id="siteHeader" class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl border-b border-border-subtle transition-[height] duration-300">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">
+    <div id="headerInner" class="safe-x flex items-center justify-between h-[72px] md:h-20 transition-all duration-300">
+
+      <a href="#/" data-link class="flex items-center gap-3 group shrink-0 py-0.5">
+        <span class="w-10 h-10 bg-primary flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg viewBox="0 0 32 32" class="w-6 h-6"><path d="M5 21c0-6.2 4.9-10.5 11-10.5S27 14.8 27 21" fill="none" stroke="#C9D8F0" stroke-width="2.4"/><path d="M3 21h26M16 10.5V21" stroke="#E8BC63" stroke-width="2.4"/></svg>
+        </span>
+        <span class="wordmark text-title-lg-m md:text-title-lg text-primary leading-none">HopeBridge</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-4 lg:gap-9" aria-label="Primary">
+        <a href="#/" data-link data-nav="/" class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">Home</a>
+        <a href="#/about" data-link data-nav="/about" class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">About</a>
+        <a href="#/our-work" data-link data-nav="/our-work" class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">Our Work</a>
+        <a href="#/impact" data-link data-nav="/impact" class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">Impact</a>
+        <a href="#/contact" data-link data-nav="/contact" class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">Contact</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#/donate" data-link class="hidden sm:inline-flex bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all duration-300 rounded-full">Donate Now</a>
+        <button id="menuBtn" class="md:hidden w-11 h-11 flex items-center justify-center text-primary" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span class="material-symbols-outlined" style="font-size:26px">menu</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MOBILE DRAWER ============ -->
+<div id="mobileMenu" class="fixed inset-0 z-[60] hidden md:hidden" role="dialog" aria-modal="true" aria-label="Menu">
+  <div id="menuScrim" class="absolute inset-0 bg-primary/40 backdrop-blur-sm"></div>
+  <div id="menuPanel" class="absolute inset-y-0 right-0 w-[86%] max-w-sm bg-surface border-l border-border-subtle flex flex-col translate-x-full transition-transform duration-300 ease-out">
+    <div class="flex items-center justify-between h-[72px] px-margin-mobile border-b border-border-subtle">
+      <span class="eyebrow eyebrow--plain">Menu</span>
+      <button id="menuClose" class="w-10 h-10 flex items-center justify-center text-primary" aria-label="Close menu">
+        <span class="material-symbols-outlined" style="font-size:26px">close</span>
+      </button>
+    </div>
+    <nav class="flex-1 overflow-y-auto px-margin-mobile py-8 flex flex-col" aria-label="Mobile">
+      <a href="#/" data-link class="text-headline-md text-primary py-3 border-b border-border-subtle">Home</a>
+      <a href="#/about" data-link class="text-headline-md text-primary py-3 border-b border-border-subtle">About</a>
+      <a href="#/our-work" data-link class="text-headline-md text-primary py-3 border-b border-border-subtle">Our Work</a>
+      <a href="#/impact" data-link class="text-headline-md text-primary py-3 border-b border-border-subtle">Impact</a>
+      <a href="#/contact" data-link class="text-headline-md text-primary py-3 border-b border-border-subtle">Contact</a>
+      <a href="#/donate" data-link class="mt-8 bg-primary text-on-primary px-8 py-4 text-label-caps uppercase text-center rounded-full">Donate Now</a>
+
+    </nav>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<main id="main" class="flex-grow pt-[72px] md:pt-20 pb-16 md:pb-0" tabindex="-1">
+  <noscript>
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop py-24">
+      <h1 class="text-headline-lg-m md:text-headline-lg text-primary mb-5">This site needs JavaScript</h1>
+      <p class="text-body-lg text-on-surface-variant mb-7 max-w-xl">Please enable it to browse our work or make a donation. You can also reach us directly and we will take your gift by phone or email.</p>
+      <p class="text-body-md"><a class="text-primary underline underline-offset-4" href="mailto:hopebridgefoundation018@gmail.com">hopebridgefoundation018@gmail.com</a> &middot; (614) 555-0142</p>
+    </div>
+  </noscript>
+  <div id="app"></div>
+</main>
+
+<!-- ============ MOBILE BOTTOM NAV ============ -->
+<div class="tabbar safe-x md:hidden fixed bottom-0 inset-x-0 z-40 bg-surface/95 backdrop-blur-md border-t border-border-subtle flex justify-around items-stretch">
+  <a href="#/" data-link data-bnav="/" class="flex flex-col items-center justify-center gap-0.5 flex-1 text-on-surface-variant">
+    <span class="material-symbols-outlined" style="font-size:22px">home</span>
+    <span class="text-label-caps-sm uppercase">Home</span>
+  </a>
+  <a href="#/our-work" data-link data-bnav="/our-work" class="flex flex-col items-center justify-center gap-0.5 flex-1 text-on-surface-variant">
+    <span class="material-symbols-outlined" style="font-size:22px">public</span>
+    <span class="text-label-caps-sm uppercase">Our Work</span>
+  </a>
+  <a href="#/impact" data-link data-bnav="/impact" class="flex flex-col items-center justify-center gap-0.5 flex-1 text-on-surface-variant">
+    <span class="material-symbols-outlined" style="font-size:22px">insights</span>
+    <span class="text-label-caps-sm uppercase">Impact</span>
+  </a>
+  <a href="#/donate" data-link data-bnav="/donate" class="flex flex-col items-center justify-center gap-0.5 flex-1 text-on-surface-variant">
+    <span class="material-symbols-outlined" style="font-size:22px">volunteer_activism</span>
+    <span class="text-label-caps-sm uppercase">Donate</span>
+  </a>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="bg-surface-container-high border-t border-border-subtle mt-auto">
+  <div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop pt-20 pb-12 md:pt-28">
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-gutter pb-16 border-b border-border-subtle">
+      <div class="lg:col-span-4">
+        <div class="flex items-center gap-3 mb-5">
+          <span class="w-9 h-9 bg-primary flex items-center justify-center" aria-hidden="true">
+            <svg viewBox="0 0 32 32" class="w-5 h-5"><path d="M5 21c0-6.2 4.9-10.5 11-10.5S27 14.8 27 21" fill="none" stroke="#C9D8F0" stroke-width="2.4"/><path d="M3 21h26M16 10.5V21" stroke="#E8BC63" stroke-width="2.4"/></svg>
+          </span>
+          <span class="wordmark text-title-lg text-primary">HopeBridge</span>
+        </div>
+        <p class="text-title-lg text-primary mb-5 max-w-xs">Connecting compassion with opportunity.</p>
+        <p class="text-body-md text-on-surface-variant max-w-xs">Working alongside communities in six states since 2018. We stay until the work can stand without us.</p>
+      </div>
+
+
+
+
+
+      <div class="lg:col-span-4">
+        <p class="eyebrow eyebrow--plain mb-5">Stay with the work</p>
+        <p class="text-body-md text-on-surface-variant mb-5">Four updates a year. Real numbers, including the ones we are still working on.</p>
+        <form id="newsletterForm" class="flex items-end gap-3 max-w-sm" novalidate>
+          <div class="flex-1">
+            <label for="nlEmail" class="sr-only">Email address</label>
+            <input id="nlEmail" type="email" class="field" placeholder="you@example.com" autocomplete="email"/>
+          </div>
+          <button type="submit" class="bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all shrink-0 rounded-full">Sign up</button>
+        </form>
+        <p id="nlMsg" class="text-body-md mt-3 text-on-surface-variant" role="status"></p>
+
+        <div class="flex gap-3 mt-7">
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-body-md text-on-surface-variant">
+      <div>
+        <p class="eyebrow eyebrow--plain mb-3">Office</p>
+        <p>1400 Bridgeway Avenue, Suite 210<br/>Columbus, OH 43215</p>
+      </div>
+      <div>
+        <p class="eyebrow eyebrow--plain mb-3">Reach us</p>
+        <p><a href="mailto:hopebridgefoundation018@gmail.com" class="footer-link hover:text-primary transition-colors">hopebridgefoundation018@gmail.com</a></p>
+        <p><a href="tel:+16145550142" class="footer-link hover:text-primary transition-colors">(614) 555-0142</a></p>
+      </div>
+
+    </div>
+
+    <div class="pt-10 mt-10 border-t border-border-subtle flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <p class="text-body-sm text-on-surface-variant">© 2026 HopeBridge Foundation. Stewardship of long-term change.</p>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-body-sm text-on-surface-variant">
+        <a href="#/contact" data-link class="footer-link footer-link--inline hover:text-primary transition-colors">Privacy policy</a>
+        <a href="#/contact" data-link class="footer-link footer-link--inline hover:text-primary transition-colors">Terms of service</a>
+        <a href="#/impact#accountability" data-link class="footer-link footer-link--inline hover:text-primary transition-colors">Financials</a>
+      </div>
+    </div>
+
+
+  </div>
+</footer>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
