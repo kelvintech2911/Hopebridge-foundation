@@ -67,19 +67,19 @@
 
       /* ---------- HEADLINE FIGURES (used site-wide) ---------- */
       stats: [
-        { value: 12500, suffix: "+", label: "People supported" },
-        { value: 68, suffix: "", label: "Community initiatives" },
-        { value: 24, suffix: "", label: "Communities reached" },
-        { value: 1850, suffix: "+", label: "Young people supported" }
+        { value: 12500, suffix: "+", label: "People supported", icon: "groups" },
+        { value: 68, suffix: "", label: "Community initiatives", icon: "volunteer_activism" },
+        { value: 24, suffix: "", label: "Communities reached", icon: "location_on" },
+        { value: 1850, suffix: "+", label: "Young people supported", icon: "school" }
       ],
 
       statsSecondary: [
-        { value: 8, suffix: "", label: "Years of work" },
-        { value: 6, suffix: "", label: "States" },
-        { value: 87, suffix: "%", label: "Spent on programs" },
-        { value: 340, suffix: "", label: "Active volunteers" },
-        { value: 9, suffix: "", label: "Partner organizations" },
-        { value: 12.4, prefix: "$", suffix: "M", decimals: 1, label: "Invested since 2018" }
+        { value: 8, suffix: "", label: "Years of work", icon: "calendar_month" },
+        { value: 6, suffix: "", label: "States", icon: "map" },
+        { value: 87, suffix: "%", label: "Spent on programs", icon: "donut_small" },
+        { value: 340, suffix: "", label: "Active volunteers", icon: "diversity_3" },
+        { value: 9, suffix: "", label: "Partner organizations", icon: "handshake" },
+        { value: 12.4, prefix: "$", suffix: "M", decimals: 1, label: "Invested since 2018", icon: "payments" }
       ],
 
       /* ---------- ORIGIN ---------- */
@@ -585,16 +585,16 @@
       return '<p class="eyebrow eyebrow--chip mb-7">' + esc(text) + "</p>";
     }
 
-    function statCell(s, i) {
-      /* Modifiers, not composed utility strings: Tailwind only compiles classes
-         it can see as literal text, so the sizes and spans this cell used to
-         build from variables were never in the stylesheet at all. */
-      const mod = i === 0 ? " stat-card--feature" : (i === 3 ? " stat-card--wide" : "");
-      return '<div class="stat-card' + mod + '">' +
-        '<div class="stat-card__label">' + esc(s.label) + "</div>" +
+    /* One card per figure, all the same size. The first used to span two columns
+       and two rows and set its number at 56px, which made the strip read as a
+       feature panel rather than a row of statistics. */
+    function statCell(s) {
+      return '<div class="stat-card">' +
+        (s.icon ? '<span class="stat-card__icon material-symbols-outlined" aria-hidden="true">' + esc(s.icon) + "</span>" : "") +
         '<div class="stat-card__value font-numeric" ' +
         'data-count="' + s.value + '" data-prefix="' + (s.prefix || "") + '" data-suffix="' + (s.suffix || "") + '" data-decimals="' + (s.decimals || 0) + '">' +
         (s.prefix || "") + "0" + (s.suffix || "") + "</div>" +
+        '<div class="stat-card__label">' + esc(s.label) + "</div>" +
         '</div>';
     }
 
@@ -602,7 +602,7 @@
       return '<section class="py-24 md:py-32 bg-stone-surface">' +
         '<div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">' +
         '<div class="stat-grid reveal">' +
-        stats.map((s, i) => statCell(s, i)).join("") +
+        stats.map((s) => statCell(s)).join("") +
         "</div>" +
         "</div></section>";
     }

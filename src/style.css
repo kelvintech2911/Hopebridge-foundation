@@ -201,20 +201,23 @@
      variables. Written as components so the grid placement and type survive a
      rebuild, and sized off the display scale rather than arbitrary values --
      the scale tops out at 56px deliberately. */
-  .stat-grid{display:grid;grid-template-columns:1fr;gap:16px}
-  .stat-card{display:flex;flex-direction:column;justify-content:space-between;gap:40px;padding:28px;background:#F5F5F0;border:1px solid #E0DCD3;border-radius:1.5rem;box-shadow:0 1px 2px rgba(20,22,26,.05);transition:box-shadow .5s ease}
+  .stat-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .stat-card{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:20px 18px;background:#F5F5F0;border:1px solid #E0DCD3;border-radius:1rem;box-shadow:0 1px 2px rgba(20,22,26,.05);transition:box-shadow .5s ease}
   .stat-card:hover{box-shadow:0 6px 18px -10px rgba(20,22,26,.22)}
-  .stat-card__label{font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#4A5058}
-  .stat-card__value{font-size:40px;line-height:1;font-weight:700;letter-spacing:-.028em;color:#173B2F}
-  .stat-card--feature .stat-card__value{font-size:48px}
+  /* The glyph sits on its own tile in the secondary token at alpha, so the icon
+     reads as an accent without introducing a colour the palette does not have. */
+  .stat-card__icon{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:10px;background:rgba(217,119,54,.10);color:#D97736;font-size:20px}
+  .stat-card__label{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#4A5058;line-height:1.35}
+  .stat-card__value{font-size:30px;line-height:1;font-weight:700;letter-spacing:-.025em;color:#173B2F}
+  
   @media (min-width:768px){
-    .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,auto))}
-    .stat-card{grid-column:span 1;grid-row:span 1;padding:32px}
-    .stat-card--feature{grid-column:span 2;grid-row:span 2;padding:44px}
-    .stat-card--wide{grid-column:span 2}
+    .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .stat-card{padding:24px 22px;gap:16px}
+    
+    
     .stat-card__label{font-size:12px}
-    .stat-card__value{font-size:44px}
-    .stat-card--feature .stat-card__value{font-size:56px}
+    .stat-card__value{font-size:34px}
+    
   }
 
 
