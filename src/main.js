@@ -1237,9 +1237,9 @@
         "</div>" +
         "</form>" +
         "</div>" +
-        '<div id="contactDone" class="hidden border border-border-subtle bg-surface-container-low p-10">' +
+        '<div id="contactDone" class="hidden border border-border-subtle bg-surface-container-low panel-pad">' +
         '<span class="material-symbols-outlined text-primary mb-5 block" style="font-size:40px" aria-hidden="true">mark_email_read</span>' +
-        '<h2 class="text-headline-md text-primary mb-4">Message ready to send.</h2>' +
+        '<h2 class="text-headline-md-m md:text-headline-md text-primary mb-4">Message ready to send.</h2>' +
         '<p class="text-body-md text-on-surface-variant mb-6 max-w-lg text-pretty">Thank you for reaching out. Your message has been received.</p>' +
         '<button id="contactAgain" class="cta-pill cta-pill--compact border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-primary hover:text-on-primary active:scale-[0.98] transition-all rounded-full">Write another message</button>' +
         "</div>" +

@@ -366,3 +366,17 @@
     padding-bottom: 0.8125rem;
   }
 }
+
+/* The contact form's confirmation panel was the last card carrying one 40px
+   padding at every width, which on a phone squeezes its message into a column
+   barely wider than the icon above it. Mirror what .donate-card already does:
+   tighter on mobile, full size from md up. */
+.panel-pad {
+  padding: 24px 20px;
+}
+
+@media (min-width: 768px) {
+  .panel-pad {
+    padding: 40px;
+  }
+}
