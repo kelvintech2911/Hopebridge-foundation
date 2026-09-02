@@ -261,22 +261,28 @@
 /* On a phone the copy runs full width, so a left-weighted scrim would leave the end of
    every line unreadable. Darken top-to-bottom instead. */
 @media (max-width:767px){.noise-hero::after{background:linear-gradient(180deg,rgba(23,59,47,.74) 0%,rgba(23,59,47,.82) 55%,rgba(23,59,47,.90) 100%)}}
-/* The home hero is carried by its photograph, so its scrim is pulled back to the
-   lightest setting the copy can still be read on. Measured against the photograph
-   itself rather than guessed: white body copy clears AA on the brightest 2% of the
-   pixels it sits on, at every desktop width from 1280 up. It holds through the
-   measure of the lede, which ends around 58% of the viewport, then falls away hard
-   so the right third of the frame is very nearly the picture on its own. The heavy
-   vertical wash the shared hero lays over the whole frame is gone; all that is left
-   is a touch at the bottom edge so the photograph does not cut hard into the cream
-   section below. The other four heroes keep the shared scrim: their photographs are
-   brighter behind the text and will not carry this one. */
-.hero--photo .noise-hero::after{background:linear-gradient(92deg,rgba(23,59,47,.70) 0%,rgba(23,59,47,.68) 52%,rgba(23,59,47,.65) 62%,rgba(23,59,47,.22) 78%,rgba(23,59,47,.04) 90%,rgba(23,59,47,0) 100%),linear-gradient(180deg,rgba(23,59,47,0) 58%,rgba(23,59,47,.10) 100%)}
-/* On a phone the copy runs the full width and can sit anywhere down the frame, so
-   there is no clear side to open up - only the overall level comes down. This block
-   has to follow the rule above: it matches at the same specificity, so source order
-   is what keeps the desktop gradient off small screens. */
-@media (max-width:767px){.hero--photo .noise-hero::after{background:linear-gradient(180deg,rgba(23,59,47,.68) 0%,rgba(23,59,47,.74) 10%,rgba(23,59,47,.78) 55%,rgba(23,59,47,.84) 100%)}}
+/* The home hero is carried by its photograph, so the veil over it is cut to a
+   whisper - a flat 0.16 of brand green across the whole frame - and the work of
+   holding the copy up is done by a soft ellipse behind the copy alone, feathered
+   out to nothing by about 70% of the width. Mean coverage across the frame is
+   0.39 against 0.51 for the left-weighted gradient it replaces, and the right
+   half of the picture is very nearly untouched.
+
+   This only works because the photograph is graded on the way in: build_heroes.py
+   rolls its blown-out sky down to a mid grey, which is what lets the copy sit
+   under a light wash at all. Ungraded, the same copy needed 0.68. Measured, not
+   guessed: white body copy clears AA on the brightest eighth of the pixels it
+   sits on, at 1280, 1440 and 1920 wide.
+
+   The other four heroes keep the shared scrim. Their photographs are brighter
+   behind the text and are not graded, so they will not carry this. */
+.hero--photo .noise-hero::after{background:radial-gradient(60% 100% at 24% 56%,rgba(23,59,47,.58) 0%,rgba(23,59,47,.50) 40%,rgba(23,59,47,.14) 72%,rgba(23,59,47,0) 92%),linear-gradient(rgba(23,59,47,.16),rgba(23,59,47,.16))}
+/* On a phone the copy fills most of the frame, so there is nowhere to feather
+   towards and the ellipse buys nothing: one even wash instead, at the level the
+   graded photograph needs anywhere in the frame. 0.64 against 0.78 before.
+   This block has to follow the rule above - it matches at the same specificity,
+   so source order is what keeps the desktop treatment off small screens. */
+@media (max-width:767px){.hero--photo .noise-hero::after{background:linear-gradient(rgba(23,59,47,.64),rgba(23,59,47,.64))}}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.reveal{opacity:1 !important;transform:none !important;transition:none !important}*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}}
 @keyframes hb-spin{to{transform:rotate(360deg)}}
 .spinner{width:44px;height:44px;border:2px solid #CFCABF;border-top-color:#173B2F;border-radius:9999px;animation:hb-spin .9s linear infinite}

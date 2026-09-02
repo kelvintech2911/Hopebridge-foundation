@@ -6,7 +6,31 @@ narrower than a target width simply does not get that width, so the srcset never
 promises detail the original does not have.
 """
 import os, io
-from PIL import Image
+from PIL import Image, ImageEnhance
+
+# The home photograph is shot against an open sky that clips to pure white,
+# and the hero copy sits right on it. Left alone it forces a scrim heavy
+# enough to bury the picture, so the highlights are rolled off here instead:
+# everything below the knee is untouched, everything above is compressed
+# towards it. That turns a blown sky into a mid grey, which the copy can sit
+# on under a much lighter wash. Colour and contrast come back up a little
+# because a shoulder flattens both. Applied at encode time, so images/FFF.jpg
+# keeps the original.
+GRADE = {"home": dict(knee=0.55, comp=0.45, color=1.10, contrast=1.06)}
+
+def graded(im, slot):
+    g = GRADE.get(slot)
+    if not g:
+        return im
+    knee, comp = g["knee"], g["comp"]
+    lut = []
+    for v in range(256):
+        x = v / 255.0
+        y = x if x <= knee else knee + (1 - knee) * comp * ((x - knee) / (1 - knee))
+        lut.append(max(0, min(255, round(255 * y))))
+    im = im.point(lut * 3)
+    im = ImageEnhance.Color(im).enhance(g["color"])
+    return ImageEnhance.Contrast(im).enhance(g["contrast"])
 
 SRC = {
     "home":   "images/FFF.jpg",               # children in a circle, shot from below
@@ -25,7 +49,7 @@ os.makedirs(OUT, exist_ok=True)
 manifest = {}
 total = 0
 for slot, src in SRC.items():
-    im = Image.open(src).convert("RGB")
+    im = graded(Image.open(src).convert("RGB"), slot)
     targets = [w for w in WIDTHS if w <= im.width]
     if not targets:
         # source narrower than the smallest step: all it can offer is itself
