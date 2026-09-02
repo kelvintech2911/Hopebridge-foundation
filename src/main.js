@@ -2474,6 +2474,23 @@
     }
 
     /* ------------------------------------------------------------- start -----*/
+    function initScrollToTop() {
+      const btn = document.getElementById("scrollToTopBtn");
+      if (!btn) return;
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 400) {
+          btn.classList.remove("opacity-0", "pointer-events-none");
+          btn.classList.add("opacity-100", "pointer-events-auto");
+        } else {
+          btn.classList.add("opacity-0", "pointer-events-none");
+          btn.classList.remove("opacity-100", "pointer-events-auto");
+        }
+      });
+      btn.addEventListener("click", () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
     let booted = false;
     function boot() {
       if (booted) return;
@@ -2481,6 +2498,7 @@
       /* We restore scroll ourselves, per route key; the browser's own guess fights it. */
       if ("scrollRestoration" in history) history.scrollRestoration = "manual";
       initChrome();
+      initScrollToTop();
       render();
     }
     window.addEventListener("popstate", () => { navIntent = "pop"; });
