@@ -31,4 +31,4 @@ def optimize_image(filepath, max_width=1920, quality=85):
         print(f"Error optimizing {filepath}: {e}")
 
 if __name__ == "__main__":
-    optimize_image("images/Community Wellbeing.jpg")
+    optimize_image("images/community-wellbeing.jpg")

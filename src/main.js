@@ -10,21 +10,21 @@
        ========================================================================== */
 
     const IMG = {
-      landscape: "images/Community%20Wellbeing.jpg",
+      landscape: "images/community-wellbeing.jpg",
       table: "https://lh3.googleusercontent.com/aida-public/AB6AXuD0zuRA9HkWYCzRelxfxxx9pnwlmbi8AJDx49GOOghhg_RS8ydvG79uXwKbLPdgCy-Z8C6JH7062SRq_Lb8uih1srBCy7IXMroS5uJV9AfHBbA1ssJeYGMoEGGy-5kxVtZzZ04Ob3Qr-D4GPWxdcieLt2oD4tXJpIpWXkAGY_qURXNZMtpj_U7htUqFPURKgBlpI2HLRAhTd_c0g2U0ssnJHMgXMG8lnSVJqhoEookHT3gJjPTdbe31",
-      classroom: "images/Education%20and%20Opportunity.jpg",
-      clinic: "images/Health%20and%20Dignity.avif",
-      workshop: "images/youth%20developlment.jpg",
-      cleanStart: "images/clean%20start.jpg",
-      bridgeToLearning: "images/Bridge%20to%20Learning%20Initiative.jpg",
-      wellAndWhole: "images/Well%20and%20Whole%20Mobile%20Clinics.jpg",
-      craftLine: "images/The%20Craft%20Line.jpg",
-      storyFromDetroit: "images/A%20story%20from%20Detroit.jpg",
-      craftman2: "images/The%20Craft%20Line2.jpg",
+      classroom: "images/education-and-opportunity.jpg",
+      clinic: "images/health-and-dignity.avif",
+      workshop: "images/youth-developlment.jpg",
+      cleanStart: "images/clean-start.jpg",
+      bridgeToLearning: "images/bridge-to-learning-initiative.jpg",
+      wellAndWhole: "images/well-and-whole-mobile-clinics.jpg",
+      craftLine: "images/the-craft-line.jpg",
+      storyFromDetroit: "images/a-story-from-detroit.jpg",
+      craftman2: "images/the-craft-line2.jpg",
       building: "https://lh3.googleusercontent.com/aida-public/AB6AXuByuerxChvZGJ0jT30Z0q92KayFEbTVsYt9rx-GF8yvn7kEmjB7rAo1Ilq8b4dB2ziLeMGGmMEPwcClRNy7Cyc3Q-AEBh7s0lra8auxhu0KakY5oFSBpQFx4IIunFwLE2rc2TWNhYH-eDRFkdYu5CrWbHj7BXXQaCoo6ApqU8Qi09YKueyuwuAlw7fn8tlKqw8VYUx0_xME-lQyG_8x7mBA-Ky8G63voVpXPdRc9DnqRKGTPLGkNvPs",
-      dana: "images/Dana%20Whifield.jpg",
-      marcus: "images/Marcus%20Reyes.jpg",
-      priya: "images/Priya%20Raman.jpg"
+      dana: "images/dana-whifield.jpg",
+      marcus: "images/marcus-reyes.jpg",
+      priya: "images/priya-raman.jpg"
     };
 
     /* The four hero photographs, pre-encoded by build_heroes.py into AVIF, WebP and
@@ -342,7 +342,7 @@
           location: "Doña Ana County, New Mexico",
           focus: "Youth & Economic Empowerment",
           since: "Since 2023",
-          image: "images/Second%20Chair%20Digital%20Hubs.jpg",
+          image: "images/second-chair-digital-hubs.jpg",
           summary: "Neighborhood hubs where remote work stops being something other people do.",
           problem: "Remote work is genuinely open to young people in the colonias outside Las Cruces, provided they own a laptop, have reliable broadband and can afford the drive to somewhere with both. Those three conditions quietly exclude most of the people the opportunity would help most.",
           response: [
@@ -368,7 +368,7 @@
           location: "Greenville & Clarksdale, Mississippi",
           focus: "Health & Dignity",
           since: "Since 2024",
-          image: "images/Sit%20With%20Us.jpg",
+          image: "images/sit-with-us.jpg",
           summary: "Weekly company, prescription support and a monthly lunch for older neighbors living alone.",
           problem: "Older adults living alone in the Delta were missing prescription refills, not through cost alone but through isolation: nobody was tracking the calendar, nobody noticed a missed week, and nobody was making the trip to the pharmacy. Loneliness turns a manageable condition into an emergency room visit.",
           response: [

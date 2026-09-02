@@ -14,7 +14,7 @@ from PIL import Image, ImageEnhance
 # everything below the knee is untouched, everything above is compressed
 # towards it. That turns a blown sky into a mid grey, which the copy can sit
 # on under a much lighter wash. Colour and contrast come back up a little
-# because a shoulder flattens both. Applied at encode time, so images/FFF.jpg
+# because a shoulder flattens both. Applied at encode time, so images/fff.jpg
 # keeps the original.
 GRADE = {"home": dict(knee=0.55, comp=0.45, color=1.10, contrast=1.06)}
 
@@ -33,12 +33,12 @@ def graded(im, slot):
     return ImageEnhance.Contrast(im).enhance(g["contrast"])
 
 SRC = {
-    "home":   "images/FFF.jpg",               # children in a circle, shot from below
-    "work":   "images/hero section 3.jpg",   # food drive, packing totes
+    "home":   "images/fff.jpg",               # children in a circle, shot from below
+    "work":   "images/hero-section-3.jpg",   # food drive, packing totes
     # hero section1/2 were 360px and 426px thumbnails - far too small for a
     # full-bleed hero, so these two slots use the largest images in the project.
-    "impact": "images/Second Chair Digital Hubs.jpg",
-    "about":  "images/Community Wellbeing.jpg",
+    "impact": "images/second-chair-digital-hubs.jpg",
+    "about":  "images/community-wellbeing.jpg",
 }
 # 1536 covers a full-bleed hero on a 1080p desktop; past that the scrim and the
 # viewing distance hide the difference and the bytes stop earning their place.
