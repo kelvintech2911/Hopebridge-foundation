@@ -20,13 +20,43 @@ import base64, io, os, re, sys
 from urllib.parse import unquote
 from PIL import Image
 
-DIST = "dist"
-MAX_W = 760          # wider than anything the page actually displays
-QUALITY = 62
-
 def die(msg):
     print("build_standalone: " + msg, file=sys.stderr)
     sys.exit(1)
+
+
+DIST = "dist"
+
+# Defaults chosen so the file stays small enough for a host with an upload cap
+# while still looking right at full width. Override them when a host is stricter:
+#   python scripts/build_standalone.py --format avif --width 640 --quality 42
+# WebP is the safe default because every browser since about 2020 decodes it.
+# AVIF is roughly a third smaller at the same quality but wants a 2023-or-later
+# browser, so it is opt-in rather than assumed.
+FORMAT = "webp"
+MAX_W = 800
+QUALITY = 62
+OUT_NAME = "standalone.html"
+
+_args = sys.argv[1:]
+while _args:
+    flag = _args.pop(0)
+    if flag in ("--format", "--width", "--quality", "--out"):
+        if not _args:
+            die("%s needs a value" % flag)
+        val = _args.pop(0)
+        if flag == "--format":
+            if val.lower() not in ("webp", "avif"):
+                die("--format must be webp or avif")
+            FORMAT = val.lower()
+        elif flag == "--width":
+            MAX_W = int(val)
+        elif flag == "--quality":
+            QUALITY = int(val)
+        else:
+            OUT_NAME = val
+    else:
+        die("unknown option %s" % flag)
 
 if not os.path.isdir(DIST):
     die("no dist/ - run `npm run build` first")
@@ -55,8 +85,11 @@ def encode(path):
         im = im.resize((MAX_W, round(im.height * MAX_W / im.width)),
                        Image.Resampling.LANCZOS)
     buf = io.BytesIO()
-    im.save(buf, "WEBP", quality=QUALITY, method=6)
-    return "data:image/webp;base64," + base64.b64encode(buf.getvalue()).decode()
+    if FORMAT == "avif":
+        im.save(buf, "AVIF", quality=QUALITY)
+    else:
+        im.save(buf, "WEBP", quality=QUALITY, method=6)
+    return ("data:image/%s;base64," % FORMAT) + base64.b64encode(buf.getvalue()).decode()
 
 assets = {}
 
@@ -148,7 +181,8 @@ for pat, src in ((r'<link[^>]*rel="icon"[^>]*type="image/png"[^>]*href="(\./asse
     uri = "data:image/png;base64," + base64.b64encode(open(p, "rb").read()).decode()
     html = html.replace(m.group(1), uri)
 
-out = os.path.join(DIST, "standalone.html")
+out = os.path.join(DIST, OUT_NAME)
 io.open(out, "w", encoding="utf-8", newline="").write(html)
-print("build_standalone: %s  %.1f MB  (%d images inlined)"
-      % (out, os.path.getsize(out) / 1048576, len(set(assets.values()))))
+print("build_standalone: %s  %.2f MB  (%d images as %s, max %dpx, q%d)"
+      % (out, os.path.getsize(out) / 1048576, len(set(assets.values())),
+         FORMAT, MAX_W, QUALITY))
