@@ -59,10 +59,16 @@ function translate(raw) {
   if (!d) return null;
   const key = raw.trim();
   if (key.length < 2) return null;
-  const hit = d[key];
+  /* The dictionaries are keyed on the sentence with its internal whitespace
+     collapsed, because that is how the sentence reads on screen. A text node
+     does not necessarily hold it that way: the header and footer live in
+     index.html, where the formatter wraps long sentences across lines, so the
+     node carries a newline and an indent in the middle. Match on the collapsed
+     form as well, or every wrapped sentence silently stays in English. */
+  const hit = d[key] || d[key.replace(/\s+/g, " ")];
   if (!hit) return null;
-  const lead = raw.slice(0, raw.indexOf(key[0]));
-  const tail = raw.slice(lead.length + key.length);
+  const lead = raw.slice(0, raw.length - raw.trimStart().length);
+  const tail = raw.slice(raw.trimEnd().length);
   return lead + hit + tail;
 }
 
