@@ -1319,7 +1319,6 @@ import { initI18n } from "./i18n/runtime.js";
       const desigOpts = SITE.donate.designations.map((d) =>
         '<option value="' + d.value + '">' + esc(d.label) + "</option>").join("");
 
-      const states = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "District of Columbia", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming", "Outside the United States"];
 
       return (
         '<section class="bg-surface pt-16 pb-10 md:pt-24 md:pb-12 border-b border-border-subtle">' +
@@ -1427,8 +1426,6 @@ import { initI18n } from "./i18n/runtime.js";
         '<p class="field-error" id="dEmailErr" role="alert">Please enter a valid email address for your receipt.</p></div>' +
         '<div class="field-group"><label class="field-label" for="dPhone">Phone <span class="normal-case tracking-normal font-normal text-outline">(optional)</span></label>' +
         '<input class="field" id="dPhone" type="tel" placeholder="(217) 555-0100" autocomplete="tel"/></div>' +
-        '<div class="field-group"><label class="field-label" for="dCountry">State</label>' +
-        '<select class="field" id="dCountry">' + states.map((c) => '<option' + (c === "Ohio" ? " selected" : "") + ">" + c + "</option>").join("") + "</select></div>" +
         "</div>" +
 
         '<div class="border-t border-border-subtle pt-7 space-y-5 mb-10">' +
@@ -2085,7 +2082,7 @@ import { initI18n } from "./i18n/runtime.js";
       designation: "most-needed",
       fees: false,
       anon: false,
-      first: "", last: "", email: "", phone: "", country: "Ohio"
+      first: "", last: "", email: "", phone: ""
     };
 
     /* The donation form is the one place on this site where losing your work costs real
@@ -2183,7 +2180,7 @@ import { initI18n } from "./i18n/runtime.js";
       if (custom) custom.value = (onPreset || !DON.amount) ? "" : DON.amount.toLocaleString("en-US");
       const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
       set("dFirst", DON.first); set("dLast", DON.last); set("dEmail", DON.email);
-      set("dPhone", DON.phone); set("dCountry", DON.country); set("designation", DON.designation);
+      set("dPhone", DON.phone); set("designation", DON.designation);
       const anon = document.getElementById("dAnon"); if (anon) anon.checked = !!DON.anon;
       const fees = document.getElementById("dFees"); if (fees) fees.checked = !!DON.fees;
     }
@@ -2200,7 +2197,7 @@ import { initI18n } from "./i18n/runtime.js";
     function initDonation() {
       DON.freq = "once"; DON.amount = 0; DON.designation = "most-needed";
       DON.fees = false; DON.anon = false;
-      DON.first = ""; DON.last = ""; DON.email = ""; DON.phone = ""; DON.country = "Ohio";
+      DON.first = ""; DON.last = ""; DON.email = ""; DON.phone = "";
 
       const root = document.getElementById("donateCard");
 
@@ -2287,7 +2284,6 @@ import { initI18n } from "./i18n/runtime.js";
         const chk = (id) => { const el = document.getElementById(id); return el ? el.checked : false; };
         DON.first = val("dFirst"); DON.last = val("dLast"); DON.email = val("dEmail");
         DON.phone = val("dPhone");
-        const c = document.getElementById("dCountry"); if (c) DON.country = c.value;
         DON.anon = chk("dAnon"); DON.fees = chk("dFees");
         donSave();
       };
@@ -2317,7 +2313,7 @@ import { initI18n } from "./i18n/runtime.js";
       donRemoveResumeNote();
       DON.freq = "once"; DON.amount = 0; DON.designation = "most-needed";
       DON.fees = false; DON.anon = false;
-      DON.first = ""; DON.last = ""; DON.email = ""; DON.phone = ""; DON.country = "Ohio";
+      DON.first = ""; DON.last = ""; DON.email = ""; DON.phone = "";
 
       const root = document.getElementById("donateCard");
       root.querySelectorAll("[data-freq]").forEach((x) =>
@@ -2336,7 +2332,6 @@ import { initI18n } from "./i18n/runtime.js";
         if (el) el.checked = false;
       });
       document.getElementById("designation").value = "most-needed";
-      document.getElementById("dCountry").value = "Ohio";
       root.querySelectorAll(".has-error").forEach((el) => el.classList.remove("has-error"));
 
       renderAmountChips();
@@ -2367,7 +2362,6 @@ import { initI18n } from "./i18n/runtime.js";
         DON.last = l.value.trim();
         DON.email = e.value.trim();
         DON.phone = document.getElementById("dPhone").value.trim();
-        DON.country = document.getElementById("dCountry").value;
         DON.anon = document.getElementById("dAnon").checked;
         DON.fees = document.getElementById("dFees").checked;
         return true;
@@ -2433,7 +2427,6 @@ import { initI18n } from "./i18n/runtime.js";
       html += reviewRow("Donor", DON.anon ? "Anonymous" : esc(DON.first + " " + DON.last), "2");
       html += reviewRow("Receipt to", esc(DON.email), "2");
       if (DON.phone) html += reviewRow("Phone", esc(DON.phone), "2");
-      html += reviewRow("State", esc(DON.country), "2");
       if (fee) html += reviewRow("Processing fee", money(fee) + " (added)", "2");
       html += '<div class="flex items-baseline justify-between gap-6 py-6 border-b border-border-subtle bg-stone-surface px-5 -mx-5 sm:mx-0 sm:px-5">' +
         '<dt class="text-label-caps uppercase text-on-surface">Total ' + (DON.freq === "monthly" ? "per month" : "today") + "</dt>" +
