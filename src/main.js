@@ -699,7 +699,7 @@
     function pageHome() {
       return (
         /* Hero */
-        '<section class="hero-offset relative bg-stone-surface overflow-hidden min-h-[100svh] flex items-center">' +
+        '<section class="hero-offset hero--photo relative bg-stone-surface overflow-hidden min-h-[100svh] flex items-center">' +
         '<div class="absolute inset-0 ph noise-hero" aria-hidden="true">' +
         heroPicture("home") +
         "</div>" +
