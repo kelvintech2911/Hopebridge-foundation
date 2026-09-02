@@ -113,12 +113,31 @@ function sweepAttrs(root) {
   }
 }
 
-/* The router sets document.title per route, and that is not a DOM node we can
-   walk, so it is handled on every pass. */
+/* The router sets document.title per route, and that is not a node we can walk,
+   so it is handled on every pass.
+
+   Two traps here, both of which have bitten. Assigning document.title replaces
+   the text node inside <title>, which is a childList mutation - so an observer
+   that watches the whole document and unconditionally assigns the title on each
+   pass will re-trigger itself forever and hang the page. Hence the assignment
+   only happens when the value actually changes, and the observer below watches
+   document.body rather than documentElement.
+
+   And the title has to be re-read whenever the router changes it, rather than
+   cached once, or every route after the first would show the home page's title. */
+let titleEn = null;
+let titleOut = null;
+
 function syncTitle() {
-  if (document.__hbEnTitle === undefined) document.__hbEnTitle = document.title;
-  const out = translate(document.__hbEnTitle);
-  document.title = out === null ? document.__hbEnTitle : out;
+  const shown = document.title;
+  /* Anything we did not write ourselves is the router setting a new English
+     title for this route. */
+  if (shown !== titleOut) titleEn = shown;
+  if (titleEn === null) return;
+  const hit = translate(titleEn);
+  const next = hit === null ? titleEn : hit;
+  if (shown !== next) document.title = next;
+  titleOut = next;
 }
 
 function apply(root) {
@@ -141,7 +160,10 @@ function restore() {
     }
   }
   touchedAttr.clear();
-  if (document.__hbEnTitle !== undefined) document.title = document.__hbEnTitle;
+  if (titleEn !== null) {
+    document.title = titleEn;
+    titleOut = titleEn;
+  }
 }
 
 export function getLang() {
@@ -194,7 +216,7 @@ export function initI18n() {
       }
     }
     syncTitle();
-  }).observe(document.documentElement, { childList: true, subtree: true });
+  }).observe(document.body, { childList: true, subtree: true });
 
   for (const sel of document.querySelectorAll("[data-lang-select]")) {
     sel.addEventListener("change", (e) => setLang(e.target.value));
