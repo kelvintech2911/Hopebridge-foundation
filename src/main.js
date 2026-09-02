@@ -1219,7 +1219,7 @@
         '<input class="field" id="cEmail" name="email" type="email" placeholder="you@example.com" autocomplete="email"/>' +
         '<p class="field-error">Please enter a valid email address.</p></div>' +
         '<div class="field-group"><label class="field-label" for="cPhone">Phone <span class="normal-case tracking-normal font-normal text-outline">(optional)</span></label>' +
-        '<input class="field" id="cPhone" name="phone" type="tel" placeholder="Optional" autocomplete="tel"/></div>' +
+        '<input class="field" id="cPhone" name="phone" type="tel" placeholder="(614) 555-0142" autocomplete="tel"/></div>' +
         '<div class="field-group"><label class="field-label" for="cReason">What is this about?</label>' +
         '<select class="field" id="cReason" name="reason">' + reasonOpts + "</select></div>" +
         '<div class="field-group sm:col-span-2"><label class="field-label" for="cOrg">Organization <span class="normal-case tracking-normal font-normal text-outline">(optional)</span></label>' +
@@ -1413,7 +1413,7 @@
         '<input class="field" id="dEmail" type="email" placeholder="you@example.com" autocomplete="email" required aria-required="true" aria-describedby="dEmailErr"/>' +
         '<p class="field-error" id="dEmailErr" role="alert">Please enter a valid email address for your receipt.</p></div>' +
         '<div class="field-group"><label class="field-label" for="dPhone">Phone <span class="normal-case tracking-normal font-normal text-outline">(optional)</span></label>' +
-        '<input class="field" id="dPhone" type="tel" placeholder="Optional" autocomplete="tel"/></div>' +
+        '<input class="field" id="dPhone" type="tel" placeholder="(614) 555-0142" autocomplete="tel"/></div>' +
         '<div class="field-group"><label class="field-label" for="dCountry">State</label>' +
         '<select class="field" id="dCountry">' + states.map((c) => '<option' + (c === "Ohio" ? " selected" : "") + ">" + c + "</option>").join("") + "</select></div>" +
         "</div>" +
