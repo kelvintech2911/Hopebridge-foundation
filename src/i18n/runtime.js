@@ -19,11 +19,23 @@
    kept on each node, switching language is instant and does not reload.
    ========================================================================== */
 
-import es from "./es.js";
-import fr from "./fr.js";
-import it from "./it.js";
+/* The three dictionaries are about 80 KB each, more than half the site's
+   JavaScript, and an English visitor never uses any of them. So each is its own
+   file, fetched the first time someone picks that language and kept after that. */
+const LOADERS = {
+  es: () => import("./es.js"),
+  fr: () => import("./fr.js"),
+  it: () => import("./it.js")
+};
+const DICTS = {};
 
-const DICTS = { es, fr, it };
+function loadDict(code) {
+  if (DICTS[code]) return Promise.resolve(DICTS[code]);
+  return LOADERS[code]().then((mod) => (DICTS[code] = mod.default));
+}
+
+/* The language a visitor has picked while its dictionary is still downloading. */
+let wanted = null;
 
 export const LANGS = [
   { code: "en", label: "English" },
@@ -177,7 +189,22 @@ export function getLang() {
 }
 
 export function setLang(code) {
-  if (!LANGS.some((l) => l.code === code) || code === current) return;
+  if (!LANGS.some((l) => l.code === code)) return;
+  if (code !== "en" && !DICTS[code]) {
+    wanted = code;
+    loadDict(code).then(
+      () => { if (wanted === code) setLang(code); },
+      () => {
+        /* Offline or blocked: stay on the current language and say so in the
+           switcher, rather than leaving it showing a language we could not load. */
+        if (wanted !== code) return;
+        wanted = null;
+        for (const sel of document.querySelectorAll("[data-lang-select]")) sel.value = current;
+      });
+    return;
+  }
+  wanted = null;
+  if (code === current) return;
   restore();
   current = code;
   try { localStorage.setItem(STORE_KEY, code); } catch (e) { /* private mode */ }
@@ -193,12 +220,10 @@ function preferred() {
     const saved = localStorage.getItem(STORE_KEY);
     if (saved && LANGS.some((l) => l.code === saved)) return saved;
   } catch (e) { /* private mode */ }
-  /* The client's reason for wanting this is visitors arriving from outside the
-     US, so honour the browser's own language before falling back to English. */
-  for (const tag of navigator.languages || [navigator.language || ""]) {
-    const base = String(tag).slice(0, 2).toLowerCase();
-    if (DICTS[base]) return base;
-  }
+  /* English is the default for every visitor, whatever their browser's language;
+     the site only changes language when someone picks one from the switcher, and
+     that choice is remembered above. The chat widget is English too (see the
+     Tawk.to block in index.html). */
   return "en";
 }
 

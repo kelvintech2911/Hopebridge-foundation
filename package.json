@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && node scripts/copy-assets.mjs",
-    "build:standalone": "npm run build && python scripts/build_standalone.py",
+    "build:standalone": "vite build --mode standalone && node scripts/copy-assets.mjs && python scripts/build_standalone.py",
     "preview": "vite preview"
   },
   "keywords": [],

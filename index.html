@@ -11,13 +11,33 @@
   <link rel="icon" href="favicon.ico" sizes="any"/>
   <link rel="icon" type="image/png" href="favicon.png"/>
   <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preconnect" href="https://lh3.googleusercontent.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400..800&amp;display=swap" rel="stylesheet" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,300..400,0..1,0&amp;icon_names=add,arrow_forward,arrow_upward,calendar_month,campaign,check_small,close,diversity_1,diversity_3,donut_small,ecg_heart,edit_calendar,fact_check,groups,handshake,handyman,hearing,history_toggle_off,home,info,insights,location_on,map,mark_email_read,menu,menu_book,payments,public,receipt_long,school,verified_user,volunteer_activism,water_drop&amp;display=block"
-    rel="stylesheet" />
+  <!-- Fonts are self-hosted (see fonts/README.md and the @font-face rules at the
+       end of src/style.css). Preloading the two every page needs lets them start
+       downloading alongside the stylesheet instead of after it. -->
+  <link rel="preload" href="./fonts/figtree-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="./fonts/material-symbols-outlined.woff2" as="font" type="font/woff2" crossorigin />
+  <!-- The hero photograph is the largest thing on the first screen, but main.js
+       renders it, so the browser cannot see it until the script has run. This
+       names it up front for the page being opened, so it downloads in parallel
+       with the script. Keep the widths in step with HERO in src/main.js. -->
+  <script id="hero-preload">
+    (function () {
+      var route = location.hash.replace(/^#/, "").split("?")[0] || "/";
+      var hero = { "/": ["home", 640, 1024, 1536], "/about": ["about", 640, 1024, 1536],
+        "/our-work": ["work", 640, 1000], "/impact": ["impact", 640, 1024, 1200] }[route];
+      if (!hero) return;
+      var link = document.createElement("link");
+      link.rel = "preload";
+      link.as = "image";
+      link.type = "image/avif";
+      link.setAttribute("imagesrcset", hero.slice(1).map(function (w) {
+        return "images/hero/hero-" + hero[0] + "-" + w + ".avif " + w + "w";
+      }).join(", "));
+      link.setAttribute("imagesizes", "100vw");
+      link.setAttribute("fetchpriority", "high");
+      document.head.appendChild(link);
+    })();
+  </script>
   <!-- COMPILED STYLESHEET, not a runtime one. Built with the Tailwind CLI from the
      former inline theme config plus the hand-written component CSS, then inlined:
      this is a one-page app, so a separate file would only add a render-blocking
@@ -42,7 +62,7 @@
   <!-- ============ HEADER ============ -->
   <header id="siteHeader"
     class="fixed top-0 inset-x-0 z-50 bg-surface/85 backdrop-blur-xl border-b border-border-subtle transition-[height] duration-300">
-    <div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">
+    <div class="header-shell max-w-container-max mx-auto md:px-10 lg:px-margin-desktop">
       <div id="headerInner"
         class="safe-x flex items-center justify-between h-[72px] md:h-20 transition-all duration-300">
 
@@ -68,12 +88,12 @@
             class="text-label-caps uppercase text-on-surface-variant hover:text-primary transition-colors duration-300 py-3.5">Contact</a>
         </nav>
 
-        <div class="flex items-center gap-3">
-          <label class="lang-switch" data-no-i18n><span class="sr-only">Choose language</span><select data-lang-select aria-label="Choose language"><option value="en">EN</option><option value="es">ES</option><option value="fr">FR</option><option value="it">IT</option></select></label>
+        <div class="header-controls flex items-center gap-3">
+          <label class="lang-switch lang-switch--header" data-no-i18n><span class="sr-only">Choose language</span><select data-lang-select aria-label="Choose language"><option value="en">EN</option><option value="es">ES</option><option value="fr">FR</option><option value="it">IT</option></select></label>
           <a href="#/donate" data-link
             class="hidden sm:inline-flex bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all duration-300 rounded-full">Donate
             Now</a>
-          <button id="menuBtn" class="md:hidden w-11 h-11 flex items-center justify-center text-primary"
+          <button id="menuBtn" class="mobile-menu-button md:hidden w-11 h-11 flex items-center justify-center text-primary"
             aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
             <span class="material-symbols-outlined" style="font-size:26px">menu</span>
           </button>
@@ -158,69 +178,119 @@
   </div>
 
   <!-- ============ FOOTER ============ -->
-  <footer class="bg-surface-container-high border-t border-border-subtle mt-auto">
-    <div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop pt-20 pb-24 md:pb-12 md:pt-28">
+  <footer class="site-footer mt-auto">
+    <div class="site-footer__wrap max-w-container-max mx-auto">
 
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-gutter pb-16 border-b border-border-subtle">
-        <div class="lg:col-span-4">
-          <p class="text-title-lg text-primary mb-5 max-w-xs">Connecting compassion with opportunity.</p>
-          <p class="text-body-md text-on-surface-variant max-w-xs">Working alongside communities in six states since
-            2018. We stay until the work can stand without us.</p>
+      <div class="site-footer__panel">
+        <div class="site-footer__main">
+          <section class="site-footer__cta" aria-labelledby="footerHeading">
+            <p class="eyebrow eyebrow--plain mb-5">HopeBridge Foundation</p>
+            <h2 id="footerHeading" class="text-display-lg-m md:text-display-lg text-primary text-balance">
+              Connecting compassion with opportunity.</h2>
+            <p class="text-body-md text-on-surface-variant">Working alongside communities in six states since 2018.
+              We stay until the work can stand without us.</p>
+            <a href="#/donate" data-link
+              class="site-footer__cta-button cta-pill inline-flex items-center justify-center bg-primary text-on-primary px-8 py-4 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all rounded-full">Donate
+              now</a>
+          </section>
+
+          <div class="site-footer__right">
+            <nav class="site-footer__nav" aria-label="Footer navigation">
+              <div class="site-footer__group">
+                <h3 class="eyebrow eyebrow--plain">Explore</h3>
+                <a href="#/" data-link class="footer-link hover:text-primary transition-colors">Home</a>
+                <a href="#/about" data-link class="footer-link hover:text-primary transition-colors">About</a>
+                <a href="#/our-work" data-link class="footer-link hover:text-primary transition-colors">Our Work</a>
+                <a href="#/impact" data-link class="footer-link hover:text-primary transition-colors">Impact</a>
+              </div>
+              <div class="site-footer__group">
+                <h3 class="eyebrow eyebrow--plain">Take part</h3>
+                <a href="#/donate" data-link class="footer-link hover:text-primary transition-colors">Donate</a>
+                <a href="#/contact" data-link class="footer-link hover:text-primary transition-colors">Contact</a>
+              </div>
+              <div class="site-footer__group">
+                <h3 class="eyebrow eyebrow--plain">Information</h3>
+                <a href="#/privacy" data-link class="footer-link hover:text-primary transition-colors">Privacy policy</a>
+                <a href="#/terms" data-link class="footer-link hover:text-primary transition-colors">Terms of service</a>
+                <a href="#/financials" data-link class="footer-link hover:text-primary transition-colors">Financials</a>
+              </div>
+            </nav>
+
+            <section class="site-footer__newsletter" aria-labelledby="newsletterHeading">
+              <div>
+                <h3 id="newsletterHeading" class="text-title-md text-primary mb-2">Stay with the work</h3>
+                <p class="text-body-md text-on-surface-variant">Four updates a year. Real numbers, including the ones
+                  we are still working on.</p>
+              </div>
+              <form id="newsletterForm" class="site-footer__form" novalidate>
+                <div class="flex-1">
+                  <label for="nlEmail" class="sr-only">Email address</label>
+                  <input id="nlEmail" type="email" class="field" placeholder="you@example.com" autocomplete="email" />
+                </div>
+                <button type="submit"
+                  class="cta-pill bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all shrink-0 rounded-full">Sign
+                  up</button>
+              </form>
+              <p id="nlMsg" class="text-body-md text-on-surface-variant" role="status"></p>
+            </section>
+          </div>
         </div>
 
-
-
-
-
-        <div class="lg:col-span-4">
-          <p class="eyebrow eyebrow--plain mb-5">Stay with the work</p>
-          <p class="text-body-md text-on-surface-variant mb-5">Four updates a year. Real numbers, including the ones we
-            are still working on.</p>
-          <form id="newsletterForm" class="flex items-end gap-3 max-w-sm" novalidate>
-            <div class="flex-1">
-              <label for="nlEmail" class="sr-only">Email address</label>
-              <input id="nlEmail" type="email" class="field" placeholder="you@example.com" autocomplete="email" />
+        <div class="site-footer__support">
+          <div>
+            <p class="eyebrow eyebrow--plain mb-3">Office</p>
+            <p class="text-body-md text-on-surface-variant">1400 Bridgeway Avenue, Suite 210<br />Columbus, OH 43215</p>
+          </div>
+          <div>
+            <p class="eyebrow eyebrow--plain mb-3">Reach us</p>
+            <div class="site-footer__contact-list">
+              <a href="mailto:hopebridgefoundation018@gmail.com" class="site-footer__contact-link">
+                <span class="site-footer__contact-icon material-symbols-outlined" aria-hidden="true">mail</span>
+                <span class="site-footer__contact-copy">
+                  <span class="site-footer__contact-label">Email</span>
+                  <span class="site-footer__contact-value">hopebridgefoundation018@gmail.com</span>
+                </span>
+              </a>
+              <a href="tel:+12175285111" class="site-footer__contact-link">
+                <span class="site-footer__contact-icon material-symbols-outlined" aria-hidden="true">call</span>
+                <span class="site-footer__contact-copy">
+                  <span class="site-footer__contact-label">Phone</span>
+                  <span class="site-footer__contact-value">+1 (217) 528-5111</span>
+                </span>
+              </a>
+              <a href="https://www.facebook.com/profile.php?id=61594792784821" target="_blank"
+                rel="noopener noreferrer" class="site-footer__contact-link">
+                <span class="site-footer__contact-icon" aria-hidden="true">
+                  <img src="images/social/facebook.svg" width="20" height="20" alt=""
+                    loading="lazy" decoding="async" />
+                </span>
+                <span class="site-footer__contact-copy">
+                  <span class="site-footer__contact-label">Social media</span>
+                  <span class="site-footer__contact-value">Facebook</span>
+                </span>
+              </a>
             </div>
-            <button type="submit"
-              class="cta-pill bg-primary text-on-primary px-6 py-3.5 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all shrink-0 rounded-full">Sign
-              up</button>
-          </form>
-          <p id="nlMsg" class="text-body-md mt-3 text-on-surface-variant" role="status"></p>
+          </div>
+          <div class="site-footer__illustration" aria-hidden="true">
+            <img src="images/photo/404-bridge-480.webp" srcset="images/photo/404-bridge-480.webp 480w, images/photo/404-bridge-800.webp 800w, images/photo/404-bridge-1200.webp 1200w" sizes="360px" width="1448" height="1086" alt="" loading="lazy" fetchpriority="low" decoding="async" />
+          </div>
+        </div>
 
-          <div class="flex gap-3 mt-7">
+        <div class="site-footer__legal">
+          <p class="text-body-sm text-on-surface-variant">&copy; 2026 HopeBridge Foundation. Stewardship of long-term
+            change.</p>
+          <div class="site-footer__legal-links text-body-sm text-on-surface-variant">
+            <a href="#/privacy" data-link
+              class="footer-link footer-link--inline hover:text-primary transition-colors">Privacy policy</a>
+            <a href="#/terms" data-link
+              class="footer-link footer-link--inline hover:text-primary transition-colors">Terms of service</a>
+            <a href="#/financials" data-link
+              class="footer-link footer-link--inline hover:text-primary transition-colors">Financials</a>
           </div>
         </div>
       </div>
 
-      <div class="pt-10 grid grid-cols-1 md:grid-cols-3 gap-8 text-body-md text-on-surface-variant">
-        <div>
-          <p class="eyebrow eyebrow--plain mb-3">Office</p>
-          <p>1400 Bridgeway Avenue, Suite 210<br />Columbus, OH 43215</p>
-        </div>
-        <div>
-          <p class="eyebrow eyebrow--plain mb-3">Reach us</p>
-          <p><a href="mailto:hopebridgefoundation018@gmail.com"
-              class="footer-link hover:text-primary transition-colors">hopebridgefoundation018@gmail.com</a></p>
-          <p><a href="tel:+12175285111" class="footer-link hover:text-primary transition-colors">+1 (217) 528-5111</a></p>
-        </div>
-
-      </div>
-
-      <div
-        class="pt-10 mt-10 border-t border-border-subtle flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <p class="text-body-sm text-on-surface-variant">© 2026 HopeBridge Foundation. Stewardship of long-term change.
-        </p>
-        <div class="flex flex-wrap gap-x-6 gap-y-2 text-body-sm text-on-surface-variant">
-          <a href="#/privacy" data-link
-            class="footer-link footer-link--inline hover:text-primary transition-colors">Privacy policy</a>
-          <a href="#/terms" data-link
-            class="footer-link footer-link--inline hover:text-primary transition-colors">Terms of service</a>
-          <a href="#/financials" data-link
-            class="footer-link footer-link--inline hover:text-primary transition-colors">Financials</a>
-        </div>
-      </div>
-
-
+      <div class="site-footer__brand" aria-hidden="true">HopeBridge</div>
     </div>
   </footer>
 
@@ -230,6 +300,61 @@
   </button>
 
   <script type="module" src="./src/main.js"></script>
+
+  <!--Start of Tawk.to Script-->
+  <!-- Live chat. The widget is injected after the page has loaded, on the
+       visitor's first interaction (or after 8 seconds), so it never competes with
+       the hero photograph, the fonts or the page settling. Its bubble takes the bottom-right corner, lifted clear of the
+       phone tab bar when that bar is showing, and once it is up the html element
+       gets .has-chat so the back-to-top button stacks above it (src/style.css). -->
+  <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var started=false;
+  function load(){
+  if (started) return;
+  started=true;
+  var tabbar=document.querySelector(".tabbar");
+  var tab=tabbar ? tabbar.offsetHeight : 0;
+  // The iframe carries shadow beside the 60px bubble (7px on mobile, 4px on
+  // desktop), so these offsets put the bubble itself on the page gutter: 20px on
+  // a phone, 32px from md up. Measured in Edge; .to-top is centred to match.
+  var spot={position:"br", xOffset:tab ? 13 : 28, yOffset:tab ? tab + 16 : 32};
+  Tawk_API.customStyle={visibility:{desktop:spot, mobile:spot}};
+  Tawk_API.onLoad=function(){
+  document.documentElement.classList.add("has-chat");
+  // The chat stays in the language set on the Tawk dashboard (English) whatever
+  // the site's language switcher says, so visitors write in whichever language
+  // they like. The site has no iframes of its own, so any body child holding one
+  // is the widget; data-no-i18n keeps the translator from ever touching it.
+  for (var i=0, kids=document.body.children; i<kids.length; i++) {
+  if (kids[i].querySelector("iframe")) kids[i].setAttribute("data-no-i18n", "");
+  }
+  };
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/6ac383e381e62434c0b4c1e0/default';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  }
+  // Tawk costs about a second of main-thread work on a mid-range phone, so it
+  // starts on the visitor's first scroll, tap, key or mouse movement rather than
+  // competing with the page while it settles. The timer is the fallback for a
+  // visitor who just reads: after 8 seconds the chat loads anyway.
+  var EVENTS=["scroll","pointermove","pointerdown","touchstart","keydown"];
+  function start(){
+  for (var i=0; i<EVENTS.length; i++) window.removeEventListener(EVENTS[i], start, {passive:true});
+  ("requestIdleCallback" in window) ? requestIdleCallback(load, {timeout:2000}) : setTimeout(load, 1);
+  }
+  function arm(){
+  for (var i=0; i<EVENTS.length; i++) window.addEventListener(EVENTS[i], start, {passive:true});
+  setTimeout(start, 8000);
+  }
+  if (document.readyState === "complete") arm(); else window.addEventListener("load", arm);
+  })();
+  </script>
+  <!--End of Tawk.to Script-->
 </body>
 
 </html>

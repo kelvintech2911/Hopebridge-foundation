@@ -6,11 +6,12 @@ image uploads. This site is a shell plus a JS bundle, a stylesheet and 45 image
 files, so on a host like that every picture 404s and the page comes up bare.
 
 This packs all of it into one file: the stylesheet and the bundle are inlined,
-and every photograph becomes a data: URI. Run `npm run build` first; this reads
-dist/ and writes dist/standalone.html.
+and every photograph and font becomes a data: URI. Run it through
+`npm run build:standalone`, which first builds with every chunk kept in the one
+bundle (see vite.config.mjs); this reads dist/ and writes dist/standalone.html.
 
-The one thing that stays external is Google Fonts, which is a stylesheet link
-rather than a file in the project.
+The one thing that stays external is the Tawk.to chat widget, which is a
+third-party service rather than a file in the project.
 
 Photographs are re-encoded to WebP at a capped width on the way in. Base64 costs
 about a third on top of the file size, so shipping the full-resolution originals
@@ -70,7 +71,19 @@ def read(rel):
 m = re.search(r'<link[^>]*rel="stylesheet"[^>]*href="(\./assets/[^"]+\.css)"[^>]*>', html)
 if not m:
     die("could not find the built stylesheet link")
-html = html.replace(m.group(0), "<style>" + read(m.group(1)) + "</style>")
+css = read(m.group(1))
+
+# The fonts are self-hosted files next to the stylesheet; carry them inside it.
+def font_uri(mt):
+    data = open(os.path.join(DIST, "assets", mt.group(1)), "rb").read()
+    return "url(data:font/woff2;base64,%s)" % base64.b64encode(data).decode()
+css = re.sub(r'url\(\./([^)]+\.woff2)\)', font_uri, css)
+html = html.replace(m.group(0), "<style>" + css + "</style>")
+
+# Preloads would only fetch files a single-file host does not have: the font
+# files (now inside the stylesheet) and the hero image the head script names.
+html = re.sub(r'<link rel="preload"[^>]*as="font"[^>]*/?>\s*', "", html)
+html = re.sub(r'<script id="hero-preload">.*?</script>\s*', "", html, flags=re.S)
 
 m = re.search(r'<script[^>]*type="module"[^>]*src="(\./assets/[^"]+\.js)"[^>]*>\s*</script>', html)
 if not m:
@@ -116,6 +129,14 @@ for slot in ("home", "work", "impact", "about"):
 
 if not assets:
     die("found no images to inline - has the bundle changed shape?")
+
+# Images written into index.html itself (the footer illustration) come out of
+# the build renamed under assets/, so inline those in place.
+def inline_img(mt):
+    tag = re.sub(r'\s(?:srcset|sizes)="[^"]*"', "", mt.group(0))
+    src = re.search(r'src="\./(assets/[^"]+)"', tag).group(1)
+    return tag.replace('src="./%s"' % src, 'src="%s"' % encode(os.path.join(DIST, src)))
+html = re.sub(r'<img[^>]*src="\./assets/[^"]+\.(?:png|jpe?g|webp|avif)"[^>]*>', inline_img, html)
 
 # ---- the shim ------------------------------------------------------------
 # The app re-renders on every route change, so a one-off pass over the DOM would

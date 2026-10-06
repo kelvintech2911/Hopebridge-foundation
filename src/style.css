@@ -350,6 +350,14 @@
     .to-top{right:32px;bottom:32px;width:52px;height:52px}
     .to-top .material-symbols-outlined{font-size:24px}
   }
+  /* Once the Tawk.to chat bubble is up it owns the corner, so the button stacks
+     above it, centred on it: the bubble's offset, its 60px height, then a 12px gap. The
+     class is only added when the widget actually loads, so a blocked widget
+     leaves the button where it was. */
+  .has-chat .to-top{right:26px;bottom:calc(4rem + env(safe-area-inset-bottom,0px) + 16px + 72px)}
+  @media (min-width:768px){
+    .has-chat .to-top{right:36px;bottom:calc(32px + 72px)}
+  }
 
 /* The four utilities initScrollToTop toggles. Unlayered and last so they win over
    .to-top's own appearance. */
@@ -403,14 +411,52 @@
   }
 }
 
-/* The 404 section is the only view whose content cannot fill the viewport, so
-   without a floor the footer rides up under a short message. The header is 72px
-   and the mobile tab bar takes another slice, so 60vh leaves the numeral
-   optically centred without pushing the footer off a laptop screen. Written here
-   because min-h-[60vh] is an arbitrary value the compiled stylesheet never
-   emitted, and as written it silently did nothing. */
+/* The not-found view is the only compact page in the app. Its height accounts
+   for the fixed header and mobile tab bar so the composition remains centred in
+   the available viewport while the existing global footer follows naturally. */
 .page-404 {
-  min-height: 60vh;
+  min-height:calc(100dvh - 72px - 4rem);
+  display:grid;
+  place-items:center;
+  padding:56px 20px 64px;
+  text-align:center;
+}
+
+.page-404__inner{
+  width:100%;
+  max-width:44rem;
+  margin-inline:auto;
+}
+
+.page-404__art{
+  width:min(100%, 340px);
+  aspect-ratio:3/1;
+  margin:0 auto 32px;
+  overflow:hidden;
+}
+
+.page-404__art img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 54%;
+}
+
+.page-404__cta{
+  min-width:152px;
+  min-height:48px;
+}
+
+@media (min-width:768px){
+  .page-404{
+    min-height:calc(100dvh - 80px);
+    padding:80px 40px 96px;
+  }
+
+  .page-404__art{
+    width:380px;
+    margin-bottom:40px;
+  }
 }
 
 
@@ -441,3 +487,579 @@
   text-transform:uppercase;color:rgb(74 80 88)}
 .lang-switch--drawer select{width:100%;font-size:16px;letter-spacing:0;padding:12px 34px 12px 16px;
   background-position:right 12px center;background-size:20px 20px}
+
+/* ---- Responsive image fitting ------------------------------------------
+   Every photograph fills its assigned frame edge to edge without distortion.
+   The frame keeps its ratio while cover handles portrait and landscape sources. */
+.ph:not(.noise-hero) img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+}
+
+/* Hero photographs live inside <picture>, so the wrapper owns the complete hero
+   area before the image sizes against it. Cover removes empty bands and the
+   high-resolution source keeps the full-bleed result crisp on large screens. */
+.noise-hero{
+  background:#173B2F;
+}
+.noise-hero picture{
+  display:block;
+  width:100%;
+  height:100%;
+}
+.noise-hero .hero-img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:none;
+  object-fit:cover;
+  object-position:center;
+}
+.hero--photo{
+  min-height:100dvh;
+}
+
+@media (max-width:767px){
+  .noise-hero .hero-img{
+    object-position:center;
+  }
+
+  /* .safe-x supplies the mobile gutter for the header. Its parent used to add
+     the same 20px a second time, pushing the menu control beyond narrow screens. */
+  .header-shell{
+    width:100%;
+  }
+
+  .hero-copy{
+    width:100%;
+    min-width:0;
+    max-width:100%;
+  }
+
+  .hero-copy h1,
+  .hero-lede{
+    max-width:100%;
+    overflow-wrap:anywhere;
+  }
+
+  .tabbar a{
+    min-width:0;
+  }
+
+  /* Mobile header: reserve a clear zone for each of the three jobs in the row.
+     The brand may shrink, while the language and menu controls keep dependable
+     44px touch targets. This prevents the logo from crowding the controls. */
+  #headerInner{
+    gap:16px;
+    min-width:0;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+  }
+
+  #headerInner .logo{
+    min-width:0;
+    gap:8px;
+  }
+
+  #headerInner .logo__mark{
+    height:36px;
+  }
+
+  #headerInner .logo__text{
+    min-width:0;
+  }
+
+  #headerInner .logo__name{
+    font-size:20px;
+    line-height:1;
+    white-space:nowrap;
+  }
+
+  #headerInner .logo__sub{
+    margin-top:4px;
+    margin-right:-.42em;
+    font-size:9px;
+    letter-spacing:.42em;
+    white-space:nowrap;
+  }
+
+  .header-controls{
+    flex:none;
+    gap:8px;
+  }
+
+  .lang-switch--header select{
+    width:auto;
+    min-width:60px;
+    min-height:44px;
+    padding:9px 26px 9px 12px;
+    background-position:right 7px center;
+    background-size:14px 14px;
+  }
+
+  .mobile-menu-button{
+    flex:none;
+    width:44px;
+    height:44px;
+    border-radius:9999px;
+    transition:background-color .2s ease,transform .2s ease;
+  }
+
+  .mobile-menu-button:hover{
+    background:#EFEBE2;
+  }
+
+  .mobile-menu-button:active{
+    transform:scale(.96);
+  }
+}
+
+@media (max-width:359px){
+  #headerInner{
+    gap:10px;
+    padding-left:max(14px,env(safe-area-inset-left,0px));
+    padding-right:max(14px,env(safe-area-inset-right,0px));
+  }
+
+  #headerInner .logo{
+    gap:7px;
+  }
+
+  #headerInner .logo__mark{
+    height:32px;
+  }
+
+  #headerInner .logo__name{
+    font-size:17px;
+  }
+
+  #headerInner .logo__sub{
+    font-size:7.5px;
+    letter-spacing:.38em;
+    margin-right:-.38em;
+  }
+
+  .header-controls{
+    gap:6px;
+  }
+
+  .lang-switch--header select{
+    min-width:56px;
+    padding-left:10px;
+    padding-right:24px;
+  }
+}
+
+/* ---- Site footer --------------------------------------------------------
+   A spacious closing composition using only the existing HopeBridge palette,
+   typography, pill actions, 16px radius, content width and link treatments. */
+.site-footer{
+  overflow:hidden;
+  background:#173B2F;
+  padding:16px 16px calc(5rem + env(safe-area-inset-bottom,0px));
+}
+
+.site-footer__wrap,
+.site-footer__main,
+.site-footer__right,
+.site-footer__newsletter,
+.site-footer__support,
+.site-footer__legal{
+  min-width:0;
+}
+
+.site-footer__panel{
+  background:#F5F5F0;
+  border:1px solid #E0DCD3;
+  border-radius:16px;
+  padding:40px 20px 24px;
+}
+
+.site-footer__main{
+  display:grid;
+  gap:48px;
+}
+
+.site-footer__cta{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  width:100%;
+  min-width:0;
+  max-width:32rem;
+}
+
+.site-footer__cta > .text-body-md{
+  max-width:30rem;
+  margin-top:24px;
+}
+
+.site-footer__cta-button{
+  margin-top:32px;
+}
+
+.site-footer__right{
+  min-width:0;
+}
+
+.site-footer__nav{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:32px 24px;
+}
+
+.site-footer__group{
+  min-width:0;
+}
+
+.site-footer__group:last-child{
+  grid-column:1 / -1;
+}
+
+.site-footer__group .eyebrow{
+  margin-bottom:12px;
+}
+
+.site-footer__group .footer-link{
+  width:fit-content;
+  max-width:100%;
+  color:#4A5058;
+}
+
+.site-footer__newsletter{
+  margin-top:40px;
+  padding-top:32px;
+  border-top:1px solid #E0DCD3;
+}
+
+.site-footer__form{
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  width:100%;
+  margin-top:24px;
+}
+
+.site-footer__form > *{
+  min-width:0;
+}
+
+.site-footer__form .field{
+  min-width:0;
+  max-width:100%;
+}
+
+.site-footer__newsletter #nlMsg{
+  margin-top:12px;
+}
+
+.site-footer__support{
+  display:grid;
+  gap:32px;
+  margin-top:48px;
+  padding-top:40px;
+  border-top:1px solid #E0DCD3;
+}
+
+.site-footer__support > *{
+  min-width:0;
+}
+
+.site-footer__support .footer-link{
+  width:fit-content;
+  max-width:100%;
+  overflow-wrap:anywhere;
+}
+
+.site-footer__contact-list{
+  display:grid;
+  gap:6px;
+}
+
+.site-footer__contact-link{
+  display:grid;
+  grid-template-columns:40px minmax(0,1fr);
+  align-items:center;
+  gap:12px;
+  width:100%;
+  min-height:60px;
+  padding:6px 8px;
+  border-radius:12px;
+  color:#4A5058;
+  transition:background-color .2s ease,color .2s ease,transform .2s ease;
+}
+
+.site-footer__contact-link:hover{
+  background:#EFEBE2;
+  color:#173B2F;
+  transform:translateY(-1px);
+}
+
+.site-footer__contact-link:active{
+  transform:translateY(0);
+}
+
+.site-footer__contact-icon{
+  display:grid;
+  place-items:center;
+  width:40px;
+  height:40px;
+  border:1px solid #E0DCD3;
+  border-radius:9999px;
+  background:#EFEBE2;
+  color:#173B2F;
+  font-size:20px;
+  line-height:1;
+}
+
+.site-footer__contact-icon img{
+  width:20px;
+  height:20px;
+}
+
+.site-footer__contact-copy{
+  display:grid;
+  min-width:0;
+  gap:1px;
+}
+
+.site-footer__contact-label{
+  color:#666B73;
+  font-size:11px;
+  font-weight:700;
+  line-height:16px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.site-footer__contact-value{
+  color:#173B2F;
+  font-size:15px;
+  font-weight:600;
+  line-height:21px;
+  overflow-wrap:anywhere;
+}
+
+.site-footer__illustration{
+  width:100%;
+  max-width:360px;
+  aspect-ratio:3 / 1;
+  overflow:hidden;
+  align-self:end;
+}
+
+.site-footer__illustration img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center 54%;
+}
+
+.site-footer__legal{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  margin-top:32px;
+  padding-top:24px;
+  border-top:1px solid #E0DCD3;
+}
+
+.site-footer__legal-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px 24px;
+}
+
+.site-footer__legal > p{
+  overflow-wrap:anywhere;
+}
+
+.site-footer__brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:140px;
+  overflow:visible;
+  padding:20px 12px 28px;
+  color:rgba(245,245,240,.16);
+  font-size:clamp(52px,16vw,220px);
+  font-weight:800;
+  line-height:1;
+  letter-spacing:-.06em;
+  white-space:nowrap;
+  user-select:none;
+}
+
+@media (max-width:639px){
+  .site-footer__cta-button,
+  .site-footer__form button{
+    width:100%;
+  }
+
+  .site-footer__form{
+    flex-direction:column;
+    align-items:stretch;
+  }
+}
+
+@media (min-width:640px){
+  .site-footer{
+    padding-inline:24px;
+  }
+
+  .site-footer__panel{
+    padding:48px 36px 32px;
+  }
+
+  .site-footer__nav{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .site-footer__group:last-child{
+    grid-column:auto;
+  }
+
+  .site-footer__support{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .site-footer__illustration{
+    grid-column:1 / -1;
+    justify-self:center;
+  }
+}
+
+@media (min-width:768px){
+  .site-footer{
+    padding:24px;
+  }
+
+  .site-footer__panel{
+    padding:64px 48px 40px;
+  }
+
+  .site-footer__legal{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .site-footer__legal-links{
+    justify-content:flex-end;
+  }
+
+  .site-footer__brand{
+    min-height:190px;
+    padding:24px 16px 32px;
+  }
+}
+
+@media (min-width:1024px){
+  .site-footer{
+    padding:32px;
+  }
+
+  .site-footer__panel{
+    padding:72px 64px 40px;
+  }
+
+  .site-footer__main{
+    grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
+    gap:72px;
+  }
+
+  .site-footer__newsletter{
+    display:grid;
+    grid-template-columns:minmax(180px,.75fr) minmax(280px,1fr);
+    gap:12px 32px;
+    align-items:end;
+    margin-top:56px;
+    padding-top:40px;
+  }
+
+  .site-footer__form{
+    margin-top:0;
+  }
+
+  .site-footer__newsletter #nlMsg{
+    grid-column:1 / -1;
+    margin-top:0;
+  }
+
+  .site-footer__support{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(300px,1.2fr);
+    gap:40px;
+    margin-top:64px;
+    padding-top:48px;
+  }
+
+  .site-footer__illustration{
+    grid-column:auto;
+    justify-self:end;
+  }
+
+  .site-footer__brand{
+    min-height:260px;
+    padding:20px 20px 36px;
+  }
+}
+
+/* ---- Self-hosted fonts ---------------------------------------------------
+   Figtree and the Material Symbols icon subset used to come from Google Fonts,
+   whose stylesheet blocked the first paint for a cross-origin round trip and
+   then a second one for the font files. Served from fonts/ they come from the
+   same origin, and index.html preloads the two that every page needs. The icon
+   file is a subset holding only the icons the site uses: the list, and how to
+   regenerate the file after adding an icon, is in fonts/README.md. */
+@font-face{
+  font-family:'Figtree';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url('../fonts/figtree-latin.woff2') format('woff2');
+  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+@font-face{
+  font-family:'Figtree';
+  font-style:normal;
+  font-weight:400 800;
+  font-display:swap;
+  src:url('../fonts/figtree-latin-ext.woff2') format('woff2');
+  unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+@font-face{
+  font-family:'Material Symbols Outlined';
+  font-style:normal;
+  font-weight:300 400;
+  font-display:block;
+  src:url('../fonts/material-symbols-outlined.woff2') format('woff2');
+}
+/* The base rules Google's stylesheet used to supply for the icon class. Zero
+   specificity, so the existing .material-symbols-outlined rules and inline
+   font sizes still win exactly as before. */
+:where(.material-symbols-outlined){
+  font-family:'Material Symbols Outlined';
+  font-weight:normal;
+  font-style:normal;
+  font-size:24px;
+  line-height:1;
+  letter-spacing:normal;
+  text-transform:none;
+  display:inline-block;
+  white-space:nowrap;
+  word-wrap:normal;
+  direction:ltr;
+  -webkit-font-feature-settings:'liga';
+  font-feature-settings:'liga';
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---- Hold the page open until the app renders ------------------------------
+   The header and footer are static HTML, but the page between them is drawn by
+   main.js. Until it is, #app is empty and the footer sits directly under the
+   header, then jumps a full page down when the content arrives: one layout
+   shift that scored 0.83 on its own. Reserving a viewport of height while #app
+   is empty keeps the footer below the fold from the first paint. */
+#app:empty{min-height:100vh;min-height:100svh}

@@ -14,8 +14,8 @@ from PIL import Image, ImageEnhance
 # everything below the knee is untouched, everything above is compressed
 # towards it. That turns a blown sky into a mid grey, which the copy can sit
 # on under a much lighter wash. Colour and contrast come back up a little
-# because a shoulder flattens both. Applied at encode time, so images/fff.jpg
-# keeps the original.
+# because a shoulder flattens both. Applied only to the responsive derivatives,
+# so the high-resolution source remains untouched.
 GRADE = {"home": dict(knee=0.55, comp=0.45, color=1.10, contrast=1.06)}
 
 def graded(im, slot):
@@ -33,7 +33,7 @@ def graded(im, slot):
     return ImageEnhance.Contrast(im).enhance(g["contrast"])
 
 SRC = {
-    "home":   "images/fff.jpg",               # children in a circle, shot from below
+    "home":   "images/hero-home-sharp.png",   # high-resolution children-in-a-circle hero
     "work":   "images/hero-section-3.jpg",   # food drive, packing totes
     # hero section1/2 were 360px and 426px thumbnails - far too small for a
     # full-bleed hero, so these two slots use the largest images in the project.
@@ -48,6 +48,7 @@ os.makedirs(OUT, exist_ok=True)
 
 manifest = {}
 total = 0
+generated = set()
 for slot, src in SRC.items():
     im = graded(Image.open(src).convert("RGB"), slot)
     targets = [w for w in WIDTHS if w <= im.width]
@@ -71,6 +72,7 @@ for slot, src in SRC.items():
                         ("jpg",  dict(quality=68 if big else 76, optimize=True, progressive=True))):
             p = "%s/hero-%s-%d.%s" % (OUT, slot, w, ext)
             rs.save(p, **kw)
+            generated.add(os.path.normcase(os.path.abspath(p)))
             made[ext] = os.path.getsize(p)
         rows.append((w, h, made))
         total += sum(made.values())
@@ -80,6 +82,17 @@ for slot, src in SRC.items():
     for w, h, made in rows:
         print("          %4dw  avif %5.1fkB   webp %5.1fkB   jpg %5.1fkB"
               % (w, made["avif"]/1024, made["webp"]/1024, made["jpg"]/1024))
+
+# Width lists can change as better source images arrive. Remove only stale
+# derivatives for the four managed hero slots so unused files are not deployed.
+for name in os.listdir(OUT):
+    managed = any(name.startswith("hero-%s-" % slot) for slot in SRC)
+    if not managed or os.path.splitext(name)[1].lower() not in (".avif", ".webp", ".jpg"):
+        continue
+    path = os.path.join(OUT, name)
+    if os.path.normcase(os.path.abspath(path)) not in generated:
+        os.remove(path)
+        print("removed stale %s" % path)
 
 print("\ntotal generated: %.0f kB across %d files"
       % (total/1024, sum(len(r)*3 for r in manifest.values())))

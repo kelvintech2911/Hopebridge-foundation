@@ -1,5 +1,6 @@
 import { initI18n } from "./i18n/runtime.js";
-  
+import PHOTOS from "./photos.js";
+
 
     /* ============================================================================
        HOPEBRIDGE FOUNDATION, CONTENT
@@ -34,7 +35,7 @@ import { initI18n } from "./i18n/runtime.js";
        `widths` never exceeds the source width, so the srcset never promises detail
        the original does not have. */
     const HERO = {
-      home:   { w: 735, h: 490, widths: [640, 735] },
+      home:   { w: 1536, h: 1024, widths: [640, 1024, 1536] },
       work:   { w: 1000, h: 625, widths: [640, 1000] },
       impact: { w: 1200, h: 675, widths: [640, 1024, 1200] },
       about:  { w: 1920, h: 1279, widths: [640, 1024, 1536] }
@@ -51,7 +52,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<source type="image/webp" srcset="' + srcset("webp") + '" sizes="100vw"/>' +
         '<img src="images/hero/hero-' + slot + '-' + widest + '.jpg" srcset="' + srcset("jpg") + '" ' +
         'sizes="100vw" width="' + m.w + '" height="' + m.h + '" alt="" ' +
-        'fetchpriority="high" decoding="async" class="w-full h-full object-cover hero-img"/>' +
+        'fetchpriority="high" decoding="async" class="hero-img"/>' +
         '</picture>';
     }
 
@@ -118,7 +119,7 @@ import { initI18n } from "./i18n/runtime.js";
 
       timeline: [
         { year: "2018", title: "An envelope in a faculty room", body: "Six teachers in Columbus pool $4,200 to keep forty students in school for one semester. Thirty-seven finish the year." },
-        { year: "2019", title: "HopeBridge is incorporated", body: "501(c)(3) status is granted and the Bridge to Learning Initiative formalizes across three Columbus schools. The foundation hires its first full-time staff member." },
+        { year: "2019", title: "HopeBridge is incorporated", body: "The Bridge to Learning Initiative formalizes across three Columbus schools. The foundation hires its first full-time staff member." },
         { year: "2020", title: "A volunteer network forms", body: "Groceries and prescriptions reach 3,000 households through the pandemic. The 200 neighbors who carried them become our permanent volunteer base." },
         { year: "2021", title: "Clean Start begins", body: "Water and septic work opens in Mingo County, West Virginia, and after an early well system fails, the committee-first rule is written into policy." },
         { year: "2022", title: "Two programs at once", body: "Well & Whole mobile clinics run their first circuit in eastern Kentucky. The Craft Line opens a shared shop in Detroit." },
@@ -496,12 +497,8 @@ import { initI18n } from "./i18n/runtime.js";
          and change `value` to drop the "on request" wording. `mono` is for values
          that read as reference numbers rather than prose. */
       credentials: [
-        { label: "Legal status", value: "501(c)(3) public charity" },
-        { label: "Tax ID (EIN)", value: "00-0000000", mono: true },
         { label: "Incorporated", value: "2019, State of Ohio" },
-        { label: "Independently audited", value: "Every year since 2023" },
-        { label: "Form 990", value: "FY2025, on request", href: "#/contact" },
-        { label: "Audited financials", value: "FY2025, on request", href: "#/contact" }
+        { label: "Independently audited", value: "Every year since 2023" }
       ],
 
       /* ---------- FAQ ---------- */
@@ -512,7 +509,7 @@ import { initI18n } from "./i18n/runtime.js";
         },
         {
           q: "Is my donation tax-deductible?",
-          a: "Yes. HopeBridge is a registered 501(c)(3) nonprofit, so your gift is deductible to the fullest extent allowed by law. Every receipt carries our EIN and a statement of goods or services received, which is what your accountant will want to see."
+          a: "Yes. Your gift is deductible to the fullest extent allowed by law. Every receipt carries a statement of goods or services received, which is what your accountant will want to see."
         },
         {
           q: "Can I choose my own donation amount?",
@@ -524,7 +521,7 @@ import { initI18n } from "./i18n/runtime.js";
         },
         {
           q: "Where does my donation go?",
-          a: "Eighty-seven cents of every dollar goes directly to programs; nine cents to operations and staff, and four to fundraising. Our audited financials and Form 990 are prepared every year and sent in full to anyone who asks, including the pages on the projects that did not work."
+          a: "Eighty-seven cents of every dollar goes directly to programs; nine cents to operations and staff, and four to fundraising."
         },
         {
           q: "Can I support a specific cause?",
@@ -573,10 +570,49 @@ import { initI18n } from "./i18n/runtime.js";
 
     const money = (n) => "$" + Number(n).toLocaleString("en-US");
 
+    /* Responsive photographs. build_photos.py writes AVIF and WebP derivatives of
+       each content photo to images/photo/ and lists them in photos.js; these
+       helpers turn that into srcset markup so the browser fetches one file at the
+       width the photo is actually shown. `sizes` describes that width per layout,
+       capped at 1280px, the container's max width. A photo missing from the
+       manifest falls back to a plain <img> of the original. */
+    const SIZES = {
+      half: "(min-width: 1280px) 600px, (min-width: 768px) 50vw, 100vw",
+      halfLg: "(min-width: 1280px) 640px, (min-width: 1024px) 50vw, 100vw",
+      third: "(min-width: 1280px) 400px, (min-width: 768px) 33vw, 100vw",
+      thirdLg: "(min-width: 1280px) 400px, (min-width: 1024px) 33vw, 100vw",
+      fiveCol: "(min-width: 1280px) 500px, (min-width: 1024px) 42vw, 100vw"
+    };
+
+    function photoSet(m, ext) {
+      return m.widths.map((w) => "images/photo/" + m.stem + "-" + w + "." + ext + " " + w + "w").join(", ");
+    }
+
+    /* <picture> with AVIF then WebP. Only for frames whose CSS lets the picture
+       box collapse (.ph picture{display:contents}). */
+    function picture(src, sizes, attrs) {
+      const m = PHOTOS[src];
+      if (!m) return '<img src="' + src + '" ' + attrs + "/>";
+      return "<picture>" +
+        '<source type="image/avif" srcset="' + photoSet(m, "avif") + '" sizes="' + sizes + '"/>' +
+        '<source type="image/webp" srcset="' + photoSet(m, "webp") + '" sizes="' + sizes + '"/>' +
+        '<img src="' + src + '" width="' + m.w + '" height="' + m.h + '" ' + attrs + "/>" +
+        "</picture>";
+    }
+
+    /* A single <img> with a WebP srcset, for places whose CSS targets the img
+       directly (sibling selectors, height:100% against its parent). */
+    function imgSet(src, sizes, attrs) {
+      const m = PHOTOS[src];
+      if (!m) return '<img src="' + src + '" ' + attrs + "/>";
+      return '<img src="' + src + '" srcset="' + photoSet(m, "webp") + '" sizes="' + sizes + '" ' +
+        'width="' + m.w + '" height="' + m.h + '" ' + attrs + "/>";
+    }
+
     /* Image with a built-in fallback wrapper (see .ph / .ph--failed in CSS) */
-    function ph(src, alt, ratioCls, extra) {
+    function ph(src, alt, ratioCls, extra, sizes) {
       return '<div class="ph ' + (ratioCls || "aspect-[4/3]") + " " + (extra || "") + '">' +
-        '<img src="' + src + '" alt="' + esc(alt) + '" loading="lazy" decoding="async"/></div>';
+        picture(src, sizes || SIZES.half, 'alt="' + esc(alt) + '" loading="lazy" decoding="async"') + "</div>";
     }
 
     function eyebrow(text, cls) {
@@ -701,7 +737,7 @@ import { initI18n } from "./i18n/runtime.js";
     function pageHome() {
       return (
         /* Hero */
-        '<section class="hero-offset hero--photo relative bg-stone-surface overflow-hidden min-h-[100svh] flex items-center">' +
+        '<section class="hero-offset hero--photo relative bg-stone-surface overflow-hidden flex items-center">' +
         '<div class="absolute inset-0 ph noise-hero" aria-hidden="true">' +
         heroPicture("home") +
         "</div>" +
@@ -716,9 +752,9 @@ import { initI18n } from "./i18n/runtime.js";
         "</div>" +
         '<div class="hero-proof reveal reveal-delay-2">' +
         '<div class="hero-proof__avatars">' +
-        '<img class="rounded-full object-cover" src="' + IMG.dana + '" alt=""/>' +
-        '<img class="rounded-full object-cover" src="' + IMG.marcus + '" alt=""/>' +
-        '<img class="rounded-full object-cover" src="' + IMG.priya + '" alt=""/>' +
+        imgSet(IMG.dana, "40px", 'class="rounded-full object-cover" alt=""') +
+        imgSet(IMG.marcus, "40px", 'class="rounded-full object-cover" alt=""') +
+        imgSet(IMG.priya, "40px", 'class="rounded-full object-cover" alt=""') +
         '</div>' +
         '<span class="hero-proof__rule" aria-hidden="true"></span>' +
         '<p class="hero-proof__text tracking-tight">' +
@@ -761,7 +797,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="grid grid-cols-1 md:grid-cols-2 gap-x-gutter gap-y-16">' +
         SITE.focus.map((f, i) =>
           '<a href="#/our-work#' + f.slug + '" data-link class="group block reveal" style="transition-delay:' + i * 80 + 'ms">' +
-          ph(f.image, f.title, "aspect-[16/10] mb-7") +
+          ph(f.image, f.title, "aspect-[16/10] mb-7", "", SIZES.half) +
           '<p class="eyebrow eyebrow--plain mb-3">0' + (i + 1) + ", " + esc(f.title) + "</p>" +
           '<h3 class="text-headline-md-m md:text-headline-md text-primary mb-4 text-pretty group-hover:text-secondary transition-colors">' + esc(f.lede) + "</h3>" +
           '<p class="text-body-md text-on-surface-variant mb-5 max-w-lg text-pretty">' + esc(f.approach.split(". ")[0]) + ".</p>" +
@@ -782,7 +818,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-14">' +
         SITE.projects.slice(0, 3).map((p, i) =>
           '<a href="#/impact#' + p.id + '" data-link class="group block reveal" style="transition-delay:' + i * 80 + 'ms">' +
-          ph(p.image, p.name, "aspect-[4/3] mb-6") +
+          ph(p.image, p.name, "aspect-[4/3] mb-6", "", SIZES.third) +
           '<p class="eyebrow eyebrow--plain mb-3">' + esc(p.location) + "</p>" +
           '<h3 class="text-title-lg text-primary mb-3 group-hover:text-secondary transition-colors">' + esc(p.name) + "</h3>" +
           '<p class="text-body-md text-on-surface-variant mb-5 text-pretty">' + esc(p.summary) + "</p>" +
@@ -795,7 +831,7 @@ import { initI18n } from "./i18n/runtime.js";
         /* Story spotlight */
         '<section class="bg-stone-surface border-y border-border-subtle">' +
         '<div class="grid grid-cols-1 lg:grid-cols-2">' +
-        '<div class="ph min-h-[340px] lg:min-h-[620px]"><img src="' + SITE.stories[1].image + '" alt="' + esc(SITE.stories[1].name) + " at work in Detroit" + '" class="w-full h-full object-cover"/></div>' +
+        '<div class="ph min-h-[340px] lg:min-h-[620px]">' + picture(SITE.stories[1].image, SIZES.halfLg, 'alt="' + esc(SITE.stories[1].name) + " at work in Detroit" + '" loading="lazy" decoding="async" class="w-full h-full object-cover"') + '</div>' +
         '<div class="flex items-center py-20 md:py-28 px-margin-mobile md:px-16 xl:px-24">' +
         '<div class="max-w-xl reveal">' +
         eyebrow("A story from Detroit") +
@@ -836,7 +872,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">' +
         '<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-gutter items-start">' +
         '<div class="lg:col-span-5 reveal">' +
-        ph(SITE.founder.image, SITE.founder.name + ", " + SITE.founder.role, "aspect-[4/5]") +
+        ph(SITE.founder.image, SITE.founder.name + ", " + SITE.founder.role, "aspect-[4/5]", "", SIZES.fiveCol) +
         '<div class="mt-6 border-t border-border-subtle pt-5">' +
         '<div class="text-title-lg text-primary">' + esc(SITE.founder.name) + "</div>" +
         '<div class="text-body-md text-on-surface-variant">' + esc(SITE.founder.role) + "</div>" +
@@ -909,7 +945,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="grid grid-cols-1 md:grid-cols-3 gap-x-gutter gap-y-14 mb-20">' +
         SITE.leadership.map((l, i) =>
           '<div class="reveal" style="transition-delay:' + i * 80 + 'ms">' +
-          ph(l.image, l.name, "aspect-[3/4] mb-6") +
+          ph(l.image, l.name, "aspect-[3/4] mb-6", "", SIZES.third) +
           '<h3 class="text-title-lg text-primary mb-1">' + esc(l.name) + "</h3>" +
           '<p class="eyebrow eyebrow--plain mb-4">' + esc(l.role) + "</p>" +
           '<p class="text-body-md text-on-surface-variant text-pretty">' + esc(l.bio) + "</p>" +
@@ -974,7 +1010,7 @@ import { initI18n } from "./i18n/runtime.js";
         SITE.focus.map((f, i) => {
           const flip = i === 1 || i === 2 || i === 5;
           const imgCol = '<div class="lg:col-span-6 ' + (flip ? "lg:col-start-7 lg:row-start-1" : "") + ' reveal">' +
-            ph(f.image, f.title, "aspect-[4/3]", "ph--flush-b") +
+            ph(f.image, f.title, "aspect-[4/3]", "ph--flush-b", SIZES.halfLg) +
             '<div class="work-metric bg-primary text-on-primary px-7 py-6 -mt-1">' +
             '<p class="eyebrow eyebrow--plain text-secondary-fixed-dim mb-2">By the numbers</p>' +
             '<p class="text-title-lg">' + esc(f.metric) + "</p>" +
@@ -1059,7 +1095,7 @@ import { initI18n } from "./i18n/runtime.js";
       const flip = i === 1 || i === 2 || i === 5;
 
       const media = '<div class="lg:col-span-5 ' + (flip ? "lg:col-start-8 lg:row-start-1" : "") + ' reveal">' +
-        ph(p.image, p.name + ", " + p.location, "aspect-[4/5]") +
+        ph(p.image, p.name + ", " + p.location, "aspect-[4/5]", "", SIZES.fiveCol) +
         "</div>";
 
       const body = '<div class="lg:col-span-6 ' + (flip ? "lg:col-start-1 lg:row-start-1" : "lg:col-start-7") + ' reveal">' +
@@ -1106,7 +1142,7 @@ import { initI18n } from "./i18n/runtime.js";
           slot: "impact",
           eyebrow: "Impact",
           title: "A legacy of change.",
-          body: "Numbers on this page are counted the way the communities asked us to count them. Where a target was missed we have said so, and our full audited accounts are sent to anyone who asks for them."
+          body: "Numbers on this page are counted the way the communities asked us to count them. Where a target was missed we have said so."
         }) +
 
         statsStrip(SITE.stats, true) +
@@ -1134,7 +1170,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="grid grid-cols-1 lg:grid-cols-3 gap-x-gutter gap-y-16">' +
         SITE.stories.map((s, i) =>
           '<article class="reveal" style="transition-delay:' + i * 90 + 'ms">' +
-          ph(s.image, s.name + ", " + s.place, "aspect-[4/3] mb-7") +
+          ph(s.image, s.name + ", " + s.place, "aspect-[4/3] mb-7", "", SIZES.thirdLg) +
           '<h3 class="text-title-lg text-primary mb-1">' + esc(s.name) + ", " + esc(s.age) + "</h3>" +
           '<p class="eyebrow eyebrow--plain mb-6">' + esc(s.place) + ", " + esc(s.program) + "</p>" +
           '<blockquote class="text-quote-m md:text-quote text-primary border-l-2 border-secondary pl-5 mb-7 text-pretty">' + esc(s.quote) + "</blockquote>" +
@@ -1156,7 +1192,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-gutter">' +
         '<div class="lg:col-span-5 reveal">' + eyebrow("Accountability") +
         '<h2 class="text-headline-lg-m md:text-headline-lg text-primary mt-6 mb-6 text-balance">Where every dollar went last year.</h2>' +
-        '<p class="text-body-md text-on-surface-variant mb-5 text-pretty">Independently audited since 2023. We send the audit unedited, alongside our Form 990, to anyone who asks — including the four pages on the Mingo County well system that failed in its second year and what replacing it cost.</p>' +
+        '<p class="text-body-md text-on-surface-variant mb-5 text-pretty">Independently audited since 2023.</p>' +
         '<p class="text-body-md text-on-surface-variant mb-8 text-pretty">Program spending has stayed above 85% every year since 2021. If it drops below that, we will say why.</p>' +
         '<a href="#/contact" data-link class="arrow-link">Request the full report <span class="material-symbols-outlined">arrow_forward</span></a>' +
         "</div>" +
@@ -1171,7 +1207,7 @@ import { initI18n } from "./i18n/runtime.js";
           '<div class="bar-track"><div class="h-full bg-primary transition-[width] duration-1000 ease-out" style="width:0%" data-bar="' + a.pct + '"></div></div>' +
           "</div>").join("") +
         "</div>" +
-        '<p class="text-body-md text-on-surface-variant mt-7 text-pretty">Figures are for the 2025 fiscal year and are rounded. Full statements, our Form 990, quarterly program reports and the board\u2019s annual review are available on request.</p>' +
+        '<p class="text-body-md text-on-surface-variant mt-7 text-pretty">Figures are for the 2025 fiscal year and are rounded. Full statements, quarterly program reports and the board\u2019s annual review are available on request.</p>' +
         "</div>" +
         "</div>" +
         "</div>" +
@@ -1336,7 +1372,7 @@ import { initI18n } from "./i18n/runtime.js";
 
         /* ---------- LEFT: context ---------- */
         '<aside class="lg:col-span-5 lg:sticky lg:top-28">' +
-        ph(IMG.classroom, "A student in a HopeBridge partner school in Columbus, Ohio", "aspect-[5/4] mb-8") +
+        ph(IMG.classroom, "A student in a HopeBridge partner school in Columbus, Ohio", "aspect-[5/4] mb-8", "", SIZES.fiveCol) +
         '<figure class="border-l-2 border-secondary pl-6 mb-10">' +
         '<blockquote class="text-quote-m md:text-quote text-primary text-pretty">Your stewardship today builds the foundation for tomorrow\u2019s quiet triumphs.</blockquote>' +
         '<figcaption class="mt-3 text-body-md text-on-surface-variant">' + esc(SITE.founder.name) + ", " + esc(SITE.founder.role) + "</figcaption>" +
@@ -1504,7 +1540,7 @@ import { initI18n } from "./i18n/runtime.js";
         '<div class="bg-stone-surface px-6 py-6 mb-8">' +
         '<p class="eyebrow eyebrow--plain mb-4">What happens next</p>' +
         '<ol class="space-y-3">' +
-        ["A tax receipt with our EIN reaches your inbox within a few minutes.",
+        ["A tax receipt reaches your inbox within a few minutes.",
           "Your gift is allocated within 2 business days and recorded in the quarterly report.",
           "In about three months you will get a short update naming what it paid for."]
           .map((t, i) =>
@@ -1586,9 +1622,12 @@ import { initI18n } from "./i18n/runtime.js";
         '</ul></div>' +
         '<div><h3 class="text-title-lg text-primary mb-3">3. Will Your Information Be Shared?</h3>' +
         '<p>We only share information with your consent, to comply with laws, to provide you with services, to protect your rights, or to fulfill organizational obligations. We do not sell your personal information to third parties.</p></div>' +
-        '<div><h3 class="text-title-lg text-primary mb-3">4. Security of Your Information</h3>' +
+        '<div><h3 class="text-title-lg text-primary mb-3">4. Live Chat</h3>' +
+        '<p class="mb-4">Our website offers a live chat, provided by tawk.to, so you can reach our team directly. When the chat loads, tawk.to may set cookies in your browser and collect technical details such as your IP address, browser type and the page you are viewing. Anything you write in the chat, including your name or email address if you choose to share them, is stored by tawk.to so that our team can read and reply to it.</p>' +
+        '<p>The chat window always appears in English, whichever language you choose for the rest of the site, and you are welcome to write to us in the language you prefer. Chat conversations are used only to answer your questions, and are covered by this policy and by tawk.to\u2019s own privacy policy: <a href="https://www.tawk.to/privacy-policy/" target="_blank" rel="noopener" class="text-primary underline hover:text-secondary transition-colors break-all">tawk.to/privacy-policy</a></p></div>' +
+        '<div><h3 class="text-title-lg text-primary mb-3">5. Security of Your Information</h3>' +
         '<p>We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process. However, please also remember that we cannot guarantee that the internet itself is 100% secure.</p></div>' +
-        '<div><h3 class="text-title-lg text-primary mb-3">5. Contact Us</h3>' +
+        '<div><h3 class="text-title-lg text-primary mb-3">6. Contact Us</h3>' +
         '<p>If you have questions or comments about this policy, you may <a href="#/contact" data-link class="text-primary underline hover:text-secondary transition-colors">contact us here</a> or by post to:</p>' +
         '<p class="mt-4 font-mono text-body-md">HopeBridge Foundation<br>1400 Bridgeway Avenue, Suite 210<br>Columbus, OH 43215</p></div>' +
         '</div></section>'
@@ -1673,12 +1712,6 @@ import { initI18n } from "./i18n/runtime.js";
         '</ul>' +
         '</figure>' +
         
-        '<div><h3 class="text-title-lg text-primary mb-3">Audits and Tax Documents</h3>' +
-        '<p class="mb-4">Our audited financials and IRS Form 990 are prepared every year by an independent third-party accounting firm. We send these documents in full to anyone who asks, including the pages detailing projects that did not meet their target metrics.</p>' +
-        '<ul class="list-disc pl-6 space-y-2">' +
-        '<li><a href="#/contact" data-link class="text-primary underline hover:text-secondary transition-colors">Request FY2025 Audited Financials (PDF)</a></li>' +
-        '<li><a href="#/contact" data-link class="text-primary underline hover:text-secondary transition-colors">Request FY2025 IRS Form 990 (PDF)</a></li>' +
-        '</ul></div>' +
         
         '</div></section>'
       );
@@ -1686,11 +1719,14 @@ import { initI18n } from "./i18n/runtime.js";
 
     function page404() {
       return (
-        '<section class="bg-surface pt-20 pb-14 md:pt-32 md:pb-20 border-b border-border-subtle page-404 flex flex-col justify-center items-center text-center">' +
-        '<div class="max-w-container-max mx-auto px-margin-mobile md:px-10 lg:px-margin-desktop">' +
-        '<h1 class="text-primary text-display-xl-mobile md:text-display-xl mb-6">404</h1>' +
-        '<p class="text-title-lg-m md:text-title-lg text-on-surface-variant mb-10 max-w-xl mx-auto">We couldn\'t find the page you\'re looking for.</p>' +
-        '<a href="#/" data-link class="cta-pill cta-pill--compact inline-flex border border-primary text-primary px-8 py-3 text-label-caps uppercase hover:bg-surface-container transition-colors rounded-full">Return Home</a>' +
+        '<section class="page-404 bg-surface border-b border-border-subtle">' +
+        '<div class="page-404__inner">' +
+        '<div class="page-404__art" aria-hidden="true">' +
+        imgSet("images/404-bridge.png", "(min-width: 768px) 380px, 340px", 'alt="" fetchpriority="high" decoding="async"') +
+        '</div>' +
+        '<h1 class="text-display-lg-m md:text-display-lg text-primary mb-5 text-balance">Page Not Found</h1>' +
+        '<p class="text-body-lg text-on-surface-variant max-w-lg mx-auto mb-8 text-pretty">We couldn\'t find the page you were looking for. Let\'s get you back to familiar ground.</p>' +
+        '<a href="#/" data-link class="cta-pill page-404__cta inline-flex items-center justify-center bg-primary text-on-primary px-8 py-4 text-label-caps uppercase hover:bg-primary-container active:scale-[0.98] transition-all rounded-full">Back to Home</a>' +
         '</div>' +
         '</section>'
       );
@@ -2492,7 +2528,6 @@ import { initI18n } from "./i18n/runtime.js";
       html += reviewRow("Frequency", DON.freq === "monthly" ? "Monthly gift" : "One-time gift");
       html += reviewRow("Directed to", esc(donDesigLabel()));
       html += reviewRow("Donor", DON.anon ? "Anonymous" : esc(DON.first + " " + DON.last));
-      html += reviewRow("Tax ID (EIN)", "00-0000000");
       html += '<div class="flex items-baseline justify-between gap-6 py-6 border-b border-border-subtle bg-stone-surface px-5">' +
         '<dt class="text-label-caps uppercase text-on-surface">Total ' + (DON.freq === "monthly" ? "per month" : "charged") + "</dt>" +
         '<dd class="font-numeric text-headline-md text-primary">' + money(donTotal()) + "</dd></div>";
@@ -2538,4 +2573,3 @@ import { initI18n } from "./i18n/runtime.js";
     } else {
       boot();
     }
-  
